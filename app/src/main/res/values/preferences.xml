@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_wait_time">2000</string>
+    <string name="default_choice_count">4</string>
+</resources>
