@@ -3,19 +3,23 @@ package com.koli.openquiz.view.quiz;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.koli.openquiz.R;
-import com.koli.openquiz.model.QuizSettings;
-import com.koli.openquiz.view.adapter.ButtonListAdapter;
-import com.koli.openquiz.service.QuestionProvider;
 import com.koli.openquiz.model.Question;
 import com.koli.openquiz.model.Score;
+import com.koli.openquiz.service.QuestionProvider;
+import com.koli.openquiz.settings.QuizSettings;
+import com.koli.openquiz.settings.SettingsProvider;
+import com.koli.openquiz.view.adapter.ButtonListAdapter;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -24,7 +28,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private MenuItem streakItem;
 
-    private QuizSettings settings;
+    private SettingsProvider settings;
     private Score score;
 
     private QuestionProvider questionProvider;
@@ -35,17 +39,16 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        questionView = (TextView) findViewById(R.id.question_view);
-        answerView = (GridView) findViewById(R.id.answer_grid);
-
         String filename = getIntent().getStringExtra("DICTIONARY");
-
         this.questionProvider = new QuestionProvider(this, filename);
 
-        this.score = new Score(this  );
-        this.settings = new QuizSettings(this);
+        questionView = findViewById(R.id.question_view);
+        answerView = findViewById(R.id.answer_grid);
 
-        answerView.setOnItemClickListener((parent, view, position, id) -> onAnswerClick(position));
+        this.score = new Score(this);
+        this.settings = new SettingsProvider(this);
+
+        answerView.setOnItemClickListener(this::onAnswerClick);
         nextQuestion();
     }
 
@@ -64,28 +67,28 @@ public class QuizActivity extends AppCompatActivity {
         answerView.setAdapter(buttonListAdapter);
     }
 
-    private void onAnswerClick(int position) {
-        if(question.isAnswered())
+    private void onAnswerClick(AdapterView<?> parent, View view, int position, long id) {
+        if (question.isAnswered())
             return;
 
-        Button button = (Button) answerView.getChildAt(position);
-
-        question.answer(position);
-        if(question.isCorrect()) {
-            score.addCorrect();
-            button.setBackgroundColor(Color.GREEN);
-        } else {
-            score.addIncorrect();
-            button.setBackgroundColor(Color.RED);
-            for(int i = 0; i < answerView.getChildCount(); i++) {
-                Button b = (Button) answerView.getChildAt(i);
-                if(b.getTag().equals(question.getWord())) {
-                    b.setBackgroundColor(Color.GREEN);
+        if (view instanceof Button button) {
+            question.answer(position);
+            if (question.isCorrect()) {
+                score.addCorrect();
+                button.setBackgroundColor(Color.GREEN);
+            } else {
+                score.addIncorrect();
+                button.setBackgroundColor(Color.RED);
+                for (int i = 0; i < answerView.getChildCount(); i++) {
+                    Button b = (Button) answerView.getChildAt(i);
+                    if (b.getTag().equals(question.getWord())) {
+                        b.setBackgroundColor(Color.GREEN);
+                    }
                 }
             }
+            updateStreakView();
+            waitThenGetQuestion();
         }
-        updateStreakView();
-        waitThenGetQuestion();
     }
 
     private void updateStreakView() {
@@ -94,7 +97,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void waitThenGetQuestion() {
-        new Handler().postDelayed(this::nextQuestion, settings.getWaitTime());
+        new Handler().postDelayed(this::nextQuestion, settings.readInt(QuizSettings.WAIT_TIME));
     }
 
 }

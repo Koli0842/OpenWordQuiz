@@ -1,6 +1,5 @@
 package com.koli.openquiz.view.dictionary;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,14 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.koli.openquiz.R;
-import com.koli.openquiz.service.DictionaryStorageService;
+import com.koli.openquiz.persistence.DictionaryStore;
 import com.koli.openquiz.view.adapter.DictionaryListAdapter;
 
 public class DictionarySelectionFragment extends Fragment {
 
     private Context context;
-    private DictionaryStorageService dictionaryStorageService;
+    private DictionaryStore dictionaryStore;
     private ListView dictionaryList;
 
     @Override
@@ -26,13 +28,13 @@ public class DictionarySelectionFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View _view, Bundle savedInstanceState) {
-        dictionaryList = getView().findViewById(R.id.dictionary_list);
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        dictionaryList = view.findViewById(R.id.dictionary_list);
 
-        DictionaryListAdapter listAdapter = new DictionaryListAdapter(context, dictionaryStorageService.list());
+        DictionaryListAdapter listAdapter = new DictionaryListAdapter(context, dictionaryStore.list());
         dictionaryList.setAdapter(listAdapter);
 
-        dictionaryList.setOnItemClickListener((parent, view, position, id) -> {
+        dictionaryList.setOnItemClickListener((parent, _view, position, id) -> {
             Intent intent = new Intent(context, ListActivity.class);
             intent.putExtra("DICTIONARY", (String) parent.getItemAtPosition(position));
             startActivity(intent);
@@ -40,10 +42,10 @@ public class DictionarySelectionFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         this.context = context;
-        this.dictionaryStorageService = new DictionaryStorageService(context);
+        this.dictionaryStore = new DictionaryStore(context);
     }
 }

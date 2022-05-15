@@ -10,8 +10,8 @@ import java.util.List;
 
 public class DictionaryListAdapter extends BaseAdapter {
 
-    private Context context;
-    private List<String> dictionaries;
+    private final Context context;
+    private final List<String> dictionaries;
 
     public DictionaryListAdapter(Context context, List<String> dictionaries) {
         this.context = context;

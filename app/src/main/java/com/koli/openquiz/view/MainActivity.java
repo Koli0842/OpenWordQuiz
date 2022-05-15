@@ -2,16 +2,20 @@ package com.koli.openquiz.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import com.koli.openquiz.R;
 import com.koli.openquiz.sync.view.login.LoginActivity;
+import com.koli.openquiz.view.dictionary.DictionarySelectionFragment;
+import com.koli.openquiz.view.quiz.QuizSelectionFragment;
 import com.koli.openquiz.view.settings.SettingsActivity;
 import com.koli.openquiz.view.statistics.StatisticsFragment;
 
@@ -23,17 +27,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferenceManager.setDefaultValues(this, R.xml.pref_dictionary, false);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        this.drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        this.drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_quiz));
@@ -54,13 +59,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_quiz) {
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, new com.koli.openquiz.view.quiz.DictionarySelectionFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new QuizSelectionFragment()).commit();
             setTitle("Quiz");
         } else if(id == R.id.nav_dictionary) {
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, new com.koli.openquiz.view.dictionary.DictionarySelectionFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new DictionarySelectionFragment()).commit();
             setTitle("Dictionaries");
         } else if (id == R.id.nav_statistics) {
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, new StatisticsFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new StatisticsFragment()).commit();
             setTitle("Statistics");
         } else if (id == R.id.nav_settings) {
             isFragment = false;

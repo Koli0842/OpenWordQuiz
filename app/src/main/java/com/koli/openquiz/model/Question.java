@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Question {
 
-    private Word word;
-    private List<Word> choices;
+    private final Word word;
+    private final List<Word> choices;
 
     private boolean answered;
     private boolean correct;
@@ -16,8 +16,8 @@ public class Question {
         this.answered = false;
     }
 
-    public void answer(int position) {
-        answer(choices.get(position));
+    public void answer(int index) {
+        answer(choices.get(index));
     }
 
     public void answer(Word chosenWord) {

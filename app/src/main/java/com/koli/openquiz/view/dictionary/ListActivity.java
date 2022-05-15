@@ -1,7 +1,7 @@
 package com.koli.openquiz.view.dictionary;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ListView;
 
 import com.koli.openquiz.R;
@@ -18,7 +18,7 @@ public class ListActivity extends AppCompatActivity {
         String filename = getIntent().getStringExtra("DICTIONARY");
         QuestionProvider questionProvider = new QuestionProvider(this, filename);
 
-        ListView listView = (ListView) findViewById(R.id.word_list);
+        ListView listView = findViewById(R.id.word_list);
         WordListAdapter listAdapter = new WordListAdapter(this, questionProvider.getDictionary());
 
         listView.setAdapter(listAdapter);

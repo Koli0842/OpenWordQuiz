@@ -10,12 +10,10 @@ import android.widget.TextView;
 import com.koli.openquiz.model.Dictionary;
 import com.koli.openquiz.model.Word;
 
-import java.util.List;
-
 public class WordListAdapter extends BaseAdapter {
 
-    private Context context;
-    private Dictionary dictionary;
+    private final Context context;
+    private final Dictionary dictionary;
 
     public WordListAdapter(Context context, Dictionary dictionary) {
         this.context = context;

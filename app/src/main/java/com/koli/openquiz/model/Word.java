@@ -1,56 +1,38 @@
 package com.koli.openquiz.model;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.squareup.moshi.Json;
 
 public class Word {
 
-    public static final String QUERY_KEY = "Query";
-    public static final String RESULT_KEY = "Result";
-
+    @Json(name = "Query")
     private String query;
+    @Json(name = "Result")
     private String result;
-
-    public Word(final String query, final String result) {
-        this.query = query;
-        this.result = result;
-    }
-
-    public static Word createWord(final JSONObject jsonObject) throws JSONException {
-        final String query = jsonObject.getString(QUERY_KEY);
-        final String result = jsonObject.getString(RESULT_KEY);
-        return new Word(query, result);
-    }
-
-    public JSONObject toJson() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put(QUERY_KEY, query);
-            jsonObject.put(RESULT_KEY, result);
-        } catch (JSONException e) {
-            jsonObject = null;
-        }
-        return jsonObject;
-    }
 
     public String getQuery() {
         return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
     }
 
     public String getResult() {
         return result;
     }
 
+    public void setResult(String result) {
+        this.result = result;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof Word))
-            return false;
+        if (o instanceof Word word)
+            return word.query.equals(query) || word.result.equals(result);
 
-        Word word = (Word) o;
-
-        return word.query.equals(query) || word.result.equals(result);
+        return false;
     }
 
     @Override

@@ -1,12 +1,14 @@
 package com.koli.openquiz.view.statistics;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.koli.openquiz.R;
 import com.koli.openquiz.model.Score;
@@ -25,16 +27,16 @@ public class StatisticsFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View _view, Bundle savedInstanceState) {
-        TextView highestStreak = (TextView) getView().findViewById(R.id.highestStreak);
-        TextView accuracy = (TextView) getView().findViewById(R.id.accuracy);
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        TextView highestStreak = view.findViewById(R.id.highestStreak);
+        TextView accuracy = view.findViewById(R.id.accuracy);
 
         highestStreak.setText(String.format(Locale.getDefault(),"%d", score.getHighestStreak()));
         accuracy.setText(String.format(Locale.getDefault(), "%.1f%%", score.getAccuracy()));
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         this.context = context;

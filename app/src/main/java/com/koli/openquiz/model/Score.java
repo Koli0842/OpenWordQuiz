@@ -2,7 +2,7 @@ package com.koli.openquiz.model;
 
 import android.content.Context;
 
-import com.koli.openquiz.service.ScoreStorageService;
+import com.koli.openquiz.persistence.ScoreStore;
 
 public class Score {
 
@@ -10,7 +10,7 @@ public class Score {
     private static final String ANSWERED = "Answered";
     private static final String CORRECT = "Correct";
 
-    private ScoreStorageService service;
+    private final ScoreStore service;
 
     private int highestStreak;
     private int answered;
@@ -19,7 +19,7 @@ public class Score {
     private int currentStreak = 0;
 
     public Score(Context context) {
-        this.service = new ScoreStorageService(context);
+        this.service = new ScoreStore(context);
 
         highestStreak = service.read(HIGHEST_STREAK);
         answered = service.read(ANSWERED);

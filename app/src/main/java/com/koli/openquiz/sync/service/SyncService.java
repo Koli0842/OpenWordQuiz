@@ -3,7 +3,7 @@ package com.koli.openquiz.sync.service;
 import android.content.Context;
 
 import com.koli.openquiz.model.Dictionary;
-import com.koli.openquiz.service.DictionaryStorageService;
+import com.koli.openquiz.persistence.DictionaryStore;
 import com.koli.openquiz.sync.domain.DictionaryInfo;
 
 import org.json.JSONArray;
@@ -32,18 +32,18 @@ public class SyncService {
     private static final Logger LOGGER = Logger.getLogger("SyncService");
 
     private SessionService sessionService;
-    private DictionaryStorageService dictionaryStorageService;
+    private DictionaryStore dictionaryStore;
 
     public SyncService(Context context) {
         this.sessionService = new SessionService(context);
-        this.dictionaryStorageService = new DictionaryStorageService(context);
+        this.dictionaryStore = new DictionaryStore(context);
     }
 
     public void sync() {
         try {
             List<DictionaryInfo> dictionaryInfos = findDictionaries();
-            for(String dictionaryName : dictionaryStorageService.list()) {
-                Dictionary dictionary = Dictionary.createDictionary(new JSONObject(dictionaryStorageService.read(dictionaryName)));
+            for(String dictionaryName : dictionaryStore.list()) {
+                Dictionary dictionary = null /*íDictionary.createDictionary(new JSONObject(dictionaryStore.read(dictionaryName)))*/;
                 boolean found = dictionaryInfos.stream().anyMatch((d) -> dictionary.getName().equals(d.getName()));
                 if(!found) {
                     LOGGER.log(Level.INFO, "No remote dictionary found with name: " + dictionary.getName());
@@ -51,13 +51,13 @@ public class SyncService {
                 }
             }
             for(DictionaryInfo dictionaryInfo : dictionaryInfos) {
-                if(!dictionaryStorageService.contains(dictionaryInfo.getName())) {
+                if(!dictionaryStore.contains(dictionaryInfo.getName())) {
                     LOGGER.log(Level.INFO, "No local dictionary found with name: " + dictionaryInfo.getName());
                     saveDictionary(dictionaryInfo.getId());
                 } else {
                     LOGGER.log(Level.INFO, "Local dictionary found with name: " + dictionaryInfo.getName());
-                    String raw = dictionaryStorageService.read(dictionaryInfo.getName());
-                    Dictionary localDictionary = Dictionary.createDictionary(new JSONObject(raw));
+                    String raw = dictionaryStore.read(dictionaryInfo.getName());
+                    Dictionary localDictionary = null/* = Dictionary.createDictionary(new JSONObject(raw))*/;
                     if(localDictionary.getVersion() < dictionaryInfo.getVersion())  {
                         saveDictionary(dictionaryInfo.getId());
                     } else if(localDictionary.getVersion() > dictionaryInfo.getVersion()) {
@@ -85,7 +85,7 @@ public class SyncService {
     }
 
     private void storeDictionary(Dictionary dictionary) {
-        dictionaryStorageService.store(dictionary.getName(), dictionary.toJson().toString());
+        //dictionaryStore.store(dictionary.getName(), dictionary.toJson().toString());
     }
 
     public List<DictionaryInfo> findDictionaries() throws IOException, JSONException {
@@ -135,7 +135,7 @@ public class SyncService {
         if (connection.getResponseCode() == 200) {
             InputStream in = new BufferedInputStream(connection.getInputStream());
             String responseString = RequestHelper.convertStreamToString(in);
-            dictionary = Dictionary.createDictionary(new JSONObject(responseString));
+            //dictionary = Dictionary.createDictionary(new JSONObject(responseString));
             LOGGER.log(Level.INFO, responseString);
         } else {
             LOGGER.log(Level.SEVERE, String.valueOf(connection.getResponseCode()));
@@ -156,7 +156,7 @@ public class SyncService {
         connection.setRequestProperty("Cookie", RequestHelper.SESSION_COOKIE + "=" + sessionService.getSessionId());
         connection.connect();
 
-        RequestHelper.writeToStream(connection.getOutputStream(), dictionary.toJson().toString());
+        //RequestHelper.writeToStream(connection.getOutputStream(), dictionary.toJson().toString());
 
         if (connection.getResponseCode() == 200) {
             LOGGER.log(Level.INFO, "Dictionary added");

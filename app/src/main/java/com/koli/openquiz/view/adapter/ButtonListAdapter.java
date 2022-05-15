@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ButtonListAdapter extends BaseAdapter {
 
-    private Context context;
-    private List<Word> choices;
+    private final Context context;
+    private final List<Word> choices;
 
     public ButtonListAdapter(Context context, List<Word> buttons) {
         this.context = context;
@@ -37,17 +37,16 @@ public class ButtonListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Button button;
-        if(convertView == null) {
-            button = new Button(context);
+        if (convertView instanceof Button button) {
+            return button;
+        } else {
+            Button button = new Button(context);
             button.setText(choices.get(position).getResult());
             button.setTag(choices.get(position));
             button.setClickable(false);
             button.setFocusable(false);
-        } else {
-            button = (Button) convertView;
+            return button;
         }
 
-        return button;
     }
 }
