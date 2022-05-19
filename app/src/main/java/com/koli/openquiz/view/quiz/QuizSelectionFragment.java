@@ -6,20 +6,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openquiz.R;
-import com.koli.openquiz.view.adapter.DictionaryListAdapter;
 import com.koli.openquiz.persistence.DictionaryStore;
+import com.koli.openquiz.view.adapter.DictionaryListAdapter;
 
 public class QuizSelectionFragment extends Fragment {
 
     private Context context;
     private DictionaryStore service;
-    private ListView dictionaryList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,16 +28,14 @@ public class QuizSelectionFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        dictionaryList = view.findViewById(R.id.dictionary_list);
+        RecyclerView dictionaryList = view.findViewById(R.id.dictionary_list);
 
-        DictionaryListAdapter listAdapter = new DictionaryListAdapter(context, service.list());
-        dictionaryList.setAdapter(listAdapter);
-
-        dictionaryList.setOnItemClickListener((parent, _view, position, id) -> {
+        DictionaryListAdapter listAdapter = new DictionaryListAdapter(service.list(), v -> {
             Intent intent = new Intent(context, QuizActivity.class);
-            intent.putExtra("DICTIONARY", (String) parent.getItemAtPosition(position));
+            intent.putExtra("DICTIONARY", v.getDictionary().getText());
             startActivity(intent);
         });
+        dictionaryList.setAdapter(listAdapter);
     }
 
     @Override

@@ -7,9 +7,10 @@
     android:layout_height="match_parent"
     tools:context="com.koli.openquiz.view.quiz.QuizActivity">
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:id="@+id/word_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

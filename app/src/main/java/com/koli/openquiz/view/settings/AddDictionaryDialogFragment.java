@@ -28,18 +28,12 @@ public class AddDictionaryDialogFragment extends DialogFragment {
         this.listener = listener;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        this.view = inflater.inflate(R.layout.fragment_dialog_add_dictionary, container, false);
-        return view;
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstance) {
         super.onCreateDialog(savedInstance);
+
+        this.view = getLayoutInflater().inflate(R.layout.fragment_dialog_add_dictionary, null);
 
         return new AlertDialog.Builder(requireActivity())
             .setView(view)

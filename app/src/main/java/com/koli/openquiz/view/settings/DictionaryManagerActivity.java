@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openquiz.R;
 import com.koli.openquiz.persistence.DictionaryStore;
@@ -71,8 +72,8 @@ public class DictionaryManagerActivity extends AppCompatActivity {
     }
 
     private void updateDictionaryList() {
-        DictionaryListAdapter listAdapter = new DictionaryListAdapter(this, dictionaryStore.list());
-        ListView dictionaryList = findViewById(R.id.dictionary_list);
+        DictionaryListAdapter listAdapter = new DictionaryListAdapter(dictionaryStore.list(), v -> {});
+        RecyclerView dictionaryList = findViewById(R.id.dictionary_list);
         dictionaryList.setAdapter(listAdapter);
     }
 }

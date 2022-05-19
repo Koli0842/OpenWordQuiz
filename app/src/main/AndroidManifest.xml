@@ -9,6 +9,12 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,7 +35,7 @@
         <activity
             android:name=".view.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".view.MainActivity">
+            android:parentActivityName=".view.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.koli.openquiz.view.MainActivity" />

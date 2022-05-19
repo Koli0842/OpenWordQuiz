@@ -3,25 +3,30 @@ package com.koli.openquiz.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.koli.openquiz.R;
-import com.koli.openquiz.model.Dictionary;
+import com.koli.openquiz.model.Word;
 
-public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHolder> {
+import java.util.List;
 
-    private final Dictionary dictionary;
+public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.ViewHolder> {
+
+    private final List<Word> choices;
     private final OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
         void onClick(ViewHolder v);
     }
 
-    public WordListAdapter(Dictionary dictionary, OnItemClickListener onItemClickListener) {
-        this.dictionary = dictionary;
+
+    public QuizAdapter(List<Word> buttons, OnItemClickListener onItemClickListener) {
+        this.choices = buttons;
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -29,7 +34,7 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.list_row_dictionary_words, parent, false);
+            .inflate(R.layout.grid_quiz_buttons, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(v -> onItemClickListener.onClick(viewHolder));
         return viewHolder;
@@ -37,33 +42,27 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getQuery().setText(dictionary.get(position).getQuery());
-        holder.getResult().setText(dictionary.get(position).getResult());
+        holder.getChoice().setText(choices.get(position).getResult());
+        holder.getChoice().setTag(choices.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return dictionary.size();
+        return choices.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView query;
-        private final TextView result;
+        private final MaterialButton choice;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            this.query = itemView.findViewById(R.id.dictionary_item_query);
-            this.result = itemView.findViewById(R.id.dictionary_item_result);
+            this.choice = itemView.findViewById(R.id.quiz_choice);
         }
 
-        public TextView getQuery() {
-            return query;
-        }
-
-        public TextView getResult() {
-            return result;
+        public MaterialButton getChoice() {
+            return choice;
         }
     }
 

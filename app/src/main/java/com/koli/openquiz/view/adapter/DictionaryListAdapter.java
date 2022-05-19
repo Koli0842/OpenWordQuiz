@@ -1,50 +1,64 @@
 package com.koli.openquiz.view.adapter;
 
-import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.koli.openquiz.R;
 
 import java.util.List;
 
-public class DictionaryListAdapter extends BaseAdapter {
+public class DictionaryListAdapter extends RecyclerView.Adapter<DictionaryListAdapter.ViewHolder> {
 
-    private final Context context;
     private final List<String> dictionaries;
+    private final OnItemClickListener onItemClickListener;
 
-    public DictionaryListAdapter(Context context, List<String> dictionaries) {
-        this.context = context;
+    public interface OnItemClickListener {
+        void onClick(ViewHolder v);
+    }
+
+    public DictionaryListAdapter(List<String> dictionaries, OnItemClickListener onItemClickListener) {
         this.dictionaries = dictionaries;
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.list_row_dictionaries, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        view.setOnClickListener(v -> onItemClickListener.onClick(viewHolder));
+        return viewHolder;
     }
 
     @Override
-    public int getCount() {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.getDictionary().setText(dictionaries.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
         return dictionaries.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return dictionaries.get(position);
-    }
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+        private final TextView dictionary;
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        TextView item;
-        if(convertView == null) {
-            item = new TextView(context);
-            item.setText(dictionaries.get(position));
-            item.setTextSize(20);
-            item.setPadding(32, 32, 32, 32);
-        } else {
-            item = (TextView) convertView;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            this.dictionary = itemView.findViewById(R.id.dictionary_item);
         }
 
-        return item;
+        public TextView getDictionary() {
+            return dictionary;
+        }
     }
+
 }

@@ -8,23 +8,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.koli.openquiz.R;
 import com.koli.openquiz.model.Question;
 import com.koli.openquiz.model.Score;
+import com.koli.openquiz.model.Word;
 import com.koli.openquiz.service.QuestionProvider;
 import com.koli.openquiz.settings.QuizSettings;
 import com.koli.openquiz.settings.SettingsProvider;
-import com.koli.openquiz.view.adapter.ButtonListAdapter;
+import com.koli.openquiz.view.adapter.QuizAdapter;
+
+import java.util.stream.Stream;
 
 public class QuizActivity extends AppCompatActivity {
 
     private TextView questionView;
-    private GridView answerView;
+    private RecyclerView answerView;
 
     private MenuItem streakItem;
 
@@ -48,7 +52,6 @@ public class QuizActivity extends AppCompatActivity {
         this.score = new Score(this);
         this.settings = new SettingsProvider(this);
 
-        answerView.setOnItemClickListener(this::onAnswerClick);
         nextQuestion();
     }
 
@@ -61,33 +64,40 @@ public class QuizActivity extends AppCompatActivity {
 
     private void nextQuestion() {
         question = questionProvider.next();
-        ButtonListAdapter buttonListAdapter = new ButtonListAdapter(this, question.getChoices());
+        QuizAdapter quizAdapter = new QuizAdapter(question.getChoices(), this::onAnswerClick);
 
         questionView.setText(question.getWord().getQuery());
-        answerView.setAdapter(buttonListAdapter);
+        answerView.setAdapter(quizAdapter);
     }
 
-    private void onAnswerClick(AdapterView<?> parent, View view, int position, long id) {
+    private void onAnswerClick(QuizAdapter.ViewHolder view) {
         if (question.isAnswered())
             return;
 
-        if (view instanceof Button button) {
-            question.answer(position);
+        MaterialButton button = view.getChoice();
+        if (button.getTag() instanceof Word word) {
+            question.answer(word);
             if (question.isCorrect()) {
                 score.addCorrect();
                 button.setBackgroundColor(Color.GREEN);
             } else {
                 score.addIncorrect();
                 button.setBackgroundColor(Color.RED);
-                for (int i = 0; i < answerView.getChildCount(); i++) {
-                    Button b = (Button) answerView.getChildAt(i);
-                    if (b.getTag().equals(question.getWord())) {
-                        b.setBackgroundColor(Color.GREEN);
-                    }
-                }
+                findAndHighlightCorrectAnswer();
             }
             updateStreakView();
             waitThenGetQuestion();
+        }
+    }
+
+    private void findAndHighlightCorrectAnswer() {
+        for (int i = 0; i < answerView.getChildCount(); i++) {
+            if (answerView.findViewHolderForAdapterPosition(i) instanceof QuizAdapter.ViewHolder viewHolder) {
+                MaterialButton button = viewHolder.getChoice();
+                if (button.getTag().equals(question.getWord())) {
+                    button.setBackgroundColor(Color.GREEN);
+                }
+            }
         }
     }
 
