@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openquiz.R;
+import com.koli.openquiz.persistence.sql.AppDatabase;
+import com.koli.openquiz.persistence.sql.dao.WordDao;
 import com.koli.openquiz.service.QuestionProvider;
 import com.koli.openquiz.view.adapter.WordListAdapter;
 
@@ -14,9 +16,9 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class ListActivity extends AppCompatActivity {
+public class DictionaryActivity extends AppCompatActivity {
 
-    private final Logger log = Logger.getLogger(ListActivity.class.getName());
+    private final Logger log = Logger.getLogger(DictionaryActivity.class.getName());
     private TextToSpeech tts;
 
     @Override
@@ -28,10 +30,11 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dictionary);
 
         String filename = getIntent().getStringExtra("DICTIONARY");
-        QuestionProvider questionProvider = new QuestionProvider(this, filename);
+        WordDao wordDao = AppDatabase.getInstance(this).wordDao();
+        QuestionProvider questionProvider = new QuestionProvider(this, wordDao.findAllInDictionary(UUID.fromString(filename)));
 
         RecyclerView listView = findViewById(R.id.word_list);
-        WordListAdapter listAdapter = new WordListAdapter(questionProvider.getDictionary(), view -> {
+        WordListAdapter listAdapter = new WordListAdapter(questionProvider.getWords(), view -> {
             log.info(view.toString());
             CharSequence text = view.getQuery().getText();
             log.info("Speaking " + text);

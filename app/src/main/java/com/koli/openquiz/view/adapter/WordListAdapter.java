@@ -10,18 +10,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openquiz.R;
 import com.koli.openquiz.model.Dictionary;
+import com.koli.openquiz.model.Word;
+import com.koli.openquiz.persistence.sql.entity.WordEntity;
+
+import java.util.List;
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHolder> {
 
-    private final Dictionary dictionary;
+    private final List<WordEntity> words;
     private final OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
         void onClick(ViewHolder v);
     }
 
-    public WordListAdapter(Dictionary dictionary, OnItemClickListener onItemClickListener) {
-        this.dictionary = dictionary;
+    public WordListAdapter(List<WordEntity> words, OnItemClickListener onItemClickListener) {
+        this.words = words;
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -37,13 +41,13 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getQuery().setText(dictionary.get(position).getQuery());
-        holder.getResult().setText(dictionary.get(position).getResult());
+        holder.getQuery().setText(words.get(position).getQuery());
+        holder.getResult().setText(words.get(position).getResult());
     }
 
     @Override
     public int getItemCount() {
-        return dictionary.size();
+        return words.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

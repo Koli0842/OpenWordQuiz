@@ -3,7 +3,6 @@ package com.koli.openquiz.sync.service;
 import android.content.Context;
 
 import com.koli.openquiz.model.Dictionary;
-import com.koli.openquiz.persistence.DictionaryStore;
 import com.koli.openquiz.sync.domain.DictionaryInfo;
 
 import org.json.JSONArray;
@@ -32,18 +31,18 @@ public class SyncService {
     private static final Logger LOGGER = Logger.getLogger("SyncService");
 
     private SessionService sessionService;
-    private DictionaryStore dictionaryStore;
+    //private DictionaryStore dictionaryStore;
 
     public SyncService(Context context) {
         this.sessionService = new SessionService(context);
-        this.dictionaryStore = new DictionaryStore(context);
+        //this.dictionaryStore = new DictionaryStore(context);
     }
 
     public void sync() {
-        try {
+        /*try {
             List<DictionaryInfo> dictionaryInfos = findDictionaries();
             for(String dictionaryName : dictionaryStore.list()) {
-                Dictionary dictionary = null /*íDictionary.createDictionary(new JSONObject(dictionaryStore.read(dictionaryName)))*/;
+                Dictionary dictionary = null /Dictionary.createDictionary(new JSONObject(dictionaryStore.read(dictionaryName)));
                 boolean found = dictionaryInfos.stream().anyMatch((d) -> dictionary.getName().equals(d.getName()));
                 if(!found) {
                     LOGGER.log(Level.INFO, "No remote dictionary found with name: " + dictionary.getName());
@@ -56,8 +55,8 @@ public class SyncService {
                     saveDictionary(dictionaryInfo.getId());
                 } else {
                     LOGGER.log(Level.INFO, "Local dictionary found with name: " + dictionaryInfo.getName());
-                    String raw = dictionaryStore.read(dictionaryInfo.getName());
-                    Dictionary localDictionary = null/* = Dictionary.createDictionary(new JSONObject(raw))*/;
+                    String raw = null;dictionaryStore.read(dictionaryInfo.getName());
+                    Dictionary localDictionary = null = Dictionary.createDictionary(new JSONObject(raw));
                     if(localDictionary.getVersion() < dictionaryInfo.getVersion())  {
                         saveDictionary(dictionaryInfo.getId());
                     } else if(localDictionary.getVersion() > dictionaryInfo.getVersion()) {
@@ -69,7 +68,7 @@ public class SyncService {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private JSONObject createJson(String content) {

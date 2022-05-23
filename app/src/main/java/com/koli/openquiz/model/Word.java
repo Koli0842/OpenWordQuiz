@@ -5,24 +5,21 @@ import com.squareup.moshi.Json;
 public class Word {
 
     @Json(name = "Query")
-    private String query;
+    private final String query;
     @Json(name = "Result")
-    private String result;
+    private final String result;
+
+    public Word(String query, String result) {
+        this.query = query;
+        this.result = result;
+    }
 
     public String getQuery() {
         return query;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
-    }
-
     public String getResult() {
         return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
     }
 
     @Override

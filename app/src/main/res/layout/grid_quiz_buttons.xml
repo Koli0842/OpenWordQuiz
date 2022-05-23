@@ -10,8 +10,8 @@
         android:textSize="20sp"
         android:clickable="false"
         android:focusable="false"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="16dp"
         android:layout_marginVertical="4dp"
         android:layout_marginHorizontal="8dp"
         android:gravity="fill_vertical" />

@@ -55,7 +55,7 @@
             android:name=".view.quiz.QuizActivity"
             android:parentActivityName=".view.MainActivity" />
         <activity
-            android:name=".view.dictionary.ListActivity"
+            android:name=".view.dictionary.DictionaryActivity"
             android:parentActivityName=".view.MainActivity" />
         <activity
             android:name=".sync.view.login.LoginActivity"

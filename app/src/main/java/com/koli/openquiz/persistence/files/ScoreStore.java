@@ -1,4 +1,4 @@
-package com.koli.openquiz.persistence;
+package com.koli.openquiz.persistence.files;
 
 import android.content.Context;
 

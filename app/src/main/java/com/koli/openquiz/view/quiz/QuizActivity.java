@@ -18,11 +18,14 @@ import com.koli.openquiz.R;
 import com.koli.openquiz.model.Question;
 import com.koli.openquiz.model.Score;
 import com.koli.openquiz.model.Word;
+import com.koli.openquiz.persistence.sql.AppDatabase;
+import com.koli.openquiz.persistence.sql.dao.WordDao;
 import com.koli.openquiz.service.QuestionProvider;
 import com.koli.openquiz.settings.QuizSettings;
 import com.koli.openquiz.settings.SettingsProvider;
 import com.koli.openquiz.view.adapter.QuizAdapter;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class QuizActivity extends AppCompatActivity {
@@ -44,7 +47,8 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         String filename = getIntent().getStringExtra("DICTIONARY");
-        this.questionProvider = new QuestionProvider(this, filename);
+        WordDao wordDao = AppDatabase.getInstance(this).wordDao();
+        this.questionProvider = new QuestionProvider(this, wordDao.findAllInDictionary(UUID.fromString(filename)));
 
         questionView = findViewById(R.id.question_view);
         answerView = findViewById(R.id.answer_grid);

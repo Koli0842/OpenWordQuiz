@@ -16,10 +16,6 @@ public class Question {
         this.answered = false;
     }
 
-    public void answer(int index) {
-        answer(choices.get(index));
-    }
-
     public void answer(Word chosenWord) {
         answered = true;
         correct = word.equals(chosenWord);

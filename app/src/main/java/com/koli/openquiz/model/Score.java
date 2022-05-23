@@ -2,7 +2,7 @@ package com.koli.openquiz.model;
 
 import android.content.Context;
 
-import com.koli.openquiz.persistence.ScoreStore;
+import com.koli.openquiz.persistence.files.ScoreStore;
 
 public class Score {
 

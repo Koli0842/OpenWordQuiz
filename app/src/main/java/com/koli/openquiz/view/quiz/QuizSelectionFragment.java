@@ -12,13 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openquiz.R;
-import com.koli.openquiz.persistence.DictionaryStore;
+import com.koli.openquiz.persistence.sql.AppDatabase;
+import com.koli.openquiz.persistence.sql.dao.DictionaryDao;
 import com.koli.openquiz.view.adapter.DictionaryListAdapter;
 
 public class QuizSelectionFragment extends Fragment {
 
     private Context context;
-    private DictionaryStore service;
+    private DictionaryDao dictionaryDao;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,9 +31,9 @@ public class QuizSelectionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         RecyclerView dictionaryList = view.findViewById(R.id.dictionary_list);
 
-        DictionaryListAdapter listAdapter = new DictionaryListAdapter(service.list(), v -> {
+        DictionaryListAdapter listAdapter = new DictionaryListAdapter(dictionaryDao.findAll(), v -> {
             Intent intent = new Intent(context, QuizActivity.class);
-            intent.putExtra("DICTIONARY", v.getDictionary().getText());
+            intent.putExtra("DICTIONARY", (String) v.getDictionary().getTag());
             startActivity(intent);
         });
         dictionaryList.setAdapter(listAdapter);
@@ -43,6 +44,6 @@ public class QuizSelectionFragment extends Fragment {
         super.onAttach(context);
 
         this.context = context;
-        this.service = new DictionaryStore(context);
+        this.dictionaryDao = AppDatabase.getInstance(context).dictionaryDao();
     }
 }

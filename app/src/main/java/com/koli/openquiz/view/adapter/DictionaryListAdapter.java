@@ -9,19 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openquiz.R;
+import com.koli.openquiz.persistence.sql.entity.DictionaryEntity;
 
 import java.util.List;
 
 public class DictionaryListAdapter extends RecyclerView.Adapter<DictionaryListAdapter.ViewHolder> {
 
-    private final List<String> dictionaries;
+    private final List<DictionaryEntity> dictionaries;
     private final OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
         void onClick(ViewHolder v);
     }
 
-    public DictionaryListAdapter(List<String> dictionaries, OnItemClickListener onItemClickListener) {
+    public DictionaryListAdapter(List<DictionaryEntity> dictionaries, OnItemClickListener onItemClickListener) {
         this.dictionaries = dictionaries;
         this.onItemClickListener = onItemClickListener;
     }
@@ -38,7 +39,9 @@ public class DictionaryListAdapter extends RecyclerView.Adapter<DictionaryListAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getDictionary().setText(dictionaries.get(position));
+        DictionaryEntity dictionaryEntity = dictionaries.get(position);
+        holder.getDictionary().setText(dictionaryEntity.getName());
+        holder.getDictionary().setTag(dictionaryEntity.getId().toString());
     }
 
     @Override

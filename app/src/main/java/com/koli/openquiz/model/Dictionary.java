@@ -9,19 +9,6 @@ public class Dictionary {
     private int version;
     private List<Word> dictionary;
 
-    public Word getRandomWord() {
-        final Random random = new Random();
-        return dictionary.get(random.nextInt(dictionary.size()));
-    }
-
-    public int size() {
-        return dictionary.size();
-    }
-
-    public Word get(final int index) {
-        return dictionary.get(index);
-    }
-
     public String getName() {
         return name;
     }
