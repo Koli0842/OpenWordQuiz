@@ -5,12 +5,12 @@
     <Preference
         android:key="quiz_settings"
         android:title="@string/pref_header_general"
-        android:fragment="com.koli.openquiz.view.settings.QuizPreferencesFragment" />
+        android:fragment="com.koli.openvocab.view.settings.QuizPreferencesFragment" />
 
     <Preference
         android:key="manage_dictionaries"
         android:title="@string/pref_header_dictionary" >
-        <intent android:action="com.koli.openquiz.action.OPEN_DICTIONARY_MANAGER" />
+        <intent android:action="com.koli.openvocab.action.OPEN_DICTIONARY_MANAGER" />
     </Preference>
 
 </PreferenceScreen>

@@ -38,7 +38,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.koli.openquiz.action.OPEN_DICTIONARY_MANAGER" />
+                <action android:name="com.koli.openvocab.action.OPEN_DICTIONARY_MANAGER" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
