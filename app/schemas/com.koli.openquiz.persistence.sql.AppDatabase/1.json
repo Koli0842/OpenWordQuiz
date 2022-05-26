@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d6ee2e91149d29715f0c31851bed5e40",
+    "identityHash": "a6d2652f4ef42744484627a395f40ecb",
     "entities": [
       {
         "tableName": "WordEntity",
@@ -90,8 +90,8 @@
         "foreignKeys": []
       },
       {
-        "tableName": "ScoreEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`wordId` BLOB NOT NULL, `answeredTimes` INTEGER NOT NULL, `correctTimes` INTEGER NOT NULL, PRIMARY KEY(`wordId`), FOREIGN KEY(`wordId`) REFERENCES `WordEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "tableName": "WordStatEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`wordId` BLOB NOT NULL, `answeredCount` INTEGER NOT NULL, `correctCount` INTEGER NOT NULL, PRIMARY KEY(`wordId`), FOREIGN KEY(`wordId`) REFERENCES `WordEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "wordId",
@@ -100,14 +100,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "answeredTimes",
-            "columnName": "answeredTimes",
+            "fieldPath": "answeredCount",
+            "columnName": "answeredCount",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "correctTimes",
-            "columnName": "correctTimes",
+            "fieldPath": "correctCount",
+            "columnName": "correctCount",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -132,12 +132,55 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "DictionaryStatEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`dictionaryId` BLOB NOT NULL, `highestStreak` INTEGER NOT NULL, PRIMARY KEY(`dictionaryId`), FOREIGN KEY(`dictionaryId`) REFERENCES `DictionaryEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "dictionaryId",
+            "columnName": "dictionaryId",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highestStreak",
+            "columnName": "highestStreak",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "dictionaryId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "DictionaryEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "dictionaryId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
-    "views": [],
+    "views": [
+      {
+        "viewName": "DictionaryWordStatView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT dictionaryEntity.id AS dictionaryId,dictionaryEntity.name AS dictionaryName,SUM(WordStatEntity.answeredCount) AS answeredCount,SUM(WordStatEntity.correctCount) AS correctCount FROM dictionaryentity INNER JOIN dictionarywordmapping AS dictionariesWithWord ON dictionaryEntity.id = dictionariesWithWord.dictionaryId LEFT JOIN WordStatEntity ON dictionariesWithWord.wordId = WordStatEntity.wordId GROUP BY dictionaryEntity.id"
+      }
+    ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd6ee2e91149d29715f0c31851bed5e40')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a6d2652f4ef42744484627a395f40ecb')"
     ]
   }
 }

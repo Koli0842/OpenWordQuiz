@@ -3,8 +3,6 @@ package com.koli.openquiz.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,8 +40,8 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getChoice().setText(choices.get(position).getResult());
-        holder.getChoice().setTag(choices.get(position));
+        holder.getChoiceButton().setText(choices.get(position).getResult());
+        holder.setWord(choices.get(position));
     }
 
     @Override
@@ -53,16 +51,25 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final MaterialButton choice;
+        private final MaterialButton choiceButton;
+        private Word word;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            this.choice = itemView.findViewById(R.id.quiz_choice);
+            this.choiceButton = itemView.findViewById(R.id.quiz_choice);
         }
 
-        public MaterialButton getChoice() {
-            return choice;
+        public MaterialButton getChoiceButton() {
+            return choiceButton;
+        }
+
+        public void setWord(Word word) {
+            this.word = word;
+        }
+
+        public Word getWord() {
+            return word;
         }
     }
 

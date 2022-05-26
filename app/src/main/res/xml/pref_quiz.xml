@@ -22,9 +22,4 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_wait_time" />
 
-    <Preference
-        android:key="manage_dictionaries"
-        android:title="Manage Dictionaries">
-        <intent android:action="com.koli.openquiz.action.OPEN_DICTIONARY_MANAGER" />
-    </Preference>
 </PreferenceScreen>

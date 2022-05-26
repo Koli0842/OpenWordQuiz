@@ -5,20 +5,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.koli.openquiz.R;
 import com.koli.openquiz.model.Question;
-import com.koli.openquiz.model.Score;
-import com.koli.openquiz.model.Word;
+import com.koli.openquiz.model.StreakCounter;
 import com.koli.openquiz.persistence.sql.AppDatabase;
+import com.koli.openquiz.persistence.sql.dao.DictionaryStatsDao;
+import com.koli.openquiz.persistence.sql.dao.WordStatsDao;
 import com.koli.openquiz.persistence.sql.dao.WordDao;
 import com.koli.openquiz.service.QuestionProvider;
 import com.koli.openquiz.settings.QuizSettings;
@@ -26,7 +23,7 @@ import com.koli.openquiz.settings.SettingsProvider;
 import com.koli.openquiz.view.adapter.QuizAdapter;
 
 import java.util.UUID;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -36,25 +33,30 @@ public class QuizActivity extends AppCompatActivity {
     private MenuItem streakItem;
 
     private SettingsProvider settings;
-    private Score score;
+    private StreakCounter streakCounter;
 
     private QuestionProvider questionProvider;
     private Question question;
+
+    private DictionaryStatsDao dictionaryStatsDao;
+    private WordStatsDao wordStatsDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        String filename = getIntent().getStringExtra("DICTIONARY");
+        UUID dictionaryId = UUID.fromString(getIntent().getStringExtra("DICTIONARY"));
         WordDao wordDao = AppDatabase.getInstance(this).wordDao();
-        this.questionProvider = new QuestionProvider(this, wordDao.findAllInDictionary(UUID.fromString(filename)));
+        this.questionProvider = new QuestionProvider(this, wordDao.findAllInDictionary(dictionaryId));
+        this.streakCounter = new StreakCounter(dictionaryId);
 
         questionView = findViewById(R.id.question_view);
         answerView = findViewById(R.id.answer_grid);
 
-        this.score = new Score(this);
         this.settings = new SettingsProvider(this);
+        this.wordStatsDao = AppDatabase.getInstance(this).scoreDao();
+        this.dictionaryStatsDao = AppDatabase.getInstance(this).dictionaryStatsDao();
 
         nextQuestion();
     }
@@ -78,36 +80,30 @@ public class QuizActivity extends AppCompatActivity {
         if (question.isAnswered())
             return;
 
-        MaterialButton button = view.getChoice();
-        if (button.getTag() instanceof Word word) {
-            question.answer(word);
-            if (question.isCorrect()) {
-                score.addCorrect();
-                button.setBackgroundColor(Color.GREEN);
-            } else {
-                score.addIncorrect();
-                button.setBackgroundColor(Color.RED);
-                findAndHighlightCorrectAnswer();
-            }
-            updateStreakView();
-            waitThenGetQuestion();
+        question.answer(view.getWord());
+        if (question.isCorrect()) {
+            wordStatsDao.addCorrect(view.getWord().getId());
+            view.getChoiceButton().setBackgroundColor(Color.GREEN);
+            streakCounter.increment();
+        } else {
+            wordStatsDao.addIncorrect(view.getWord().getId());
+            view.getChoiceButton().setBackgroundColor(Color.RED);
+            findAndHighlightCorrectAnswer();
+            dictionaryStatsDao.updateStreakWhenHigher(streakCounter.getDictionaryId(), streakCounter.getCurrentStreak());
+            streakCounter.reset();
         }
+        streakItem.setTitle(streakCounter.asString());
+        waitThenGetQuestion();
     }
 
     private void findAndHighlightCorrectAnswer() {
-        for (int i = 0; i < answerView.getChildCount(); i++) {
+        IntStream.range(0, answerView.getChildCount()).forEach(i -> {
             if (answerView.findViewHolderForAdapterPosition(i) instanceof QuizAdapter.ViewHolder viewHolder) {
-                MaterialButton button = viewHolder.getChoice();
-                if (button.getTag().equals(question.getWord())) {
-                    button.setBackgroundColor(Color.GREEN);
+                if (viewHolder.getWord().equals(question.getWord())) {
+                    viewHolder.getChoiceButton().setBackgroundColor(Color.GREEN);
                 }
             }
-        }
-    }
-
-    private void updateStreakView() {
-        int streak = score.getCurrentStreak();
-        streakItem.setTitle(Integer.toString(streak));
+        });
     }
 
     private void waitThenGetQuestion() {

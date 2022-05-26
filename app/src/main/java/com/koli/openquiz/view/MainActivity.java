@@ -17,7 +17,7 @@ import com.koli.openquiz.R;
 import com.koli.openquiz.sync.view.login.LoginActivity;
 import com.koli.openquiz.view.dictionary.DictionarySelectionFragment;
 import com.koli.openquiz.view.quiz.QuizSelectionFragment;
-import com.koli.openquiz.view.settings.SettingsActivity;
+import com.koli.openquiz.view.settings.SettingsFragment;
 import com.koli.openquiz.view.statistics.StatisticsFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferenceManager.setDefaultValues(this, R.xml.pref_dictionary, false);
+        PreferenceManager.setDefaultValues(this, R.xml.pref_quiz, false);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,11 +71,10 @@ public class MainActivity extends AppCompatActivity {
                 setTitle("Statistics");
             }
             case R.id.nav_settings -> {
-                isFragment = false;
-                startActivity(new Intent(this, SettingsActivity.class));
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new SettingsFragment()).commit();
+                setTitle("Settings");
             }
             case R.id.nav_login -> {
-                isFragment = false;
                 startActivity(new Intent(this, LoginActivity.class));
             }
         }

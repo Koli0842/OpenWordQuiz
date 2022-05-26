@@ -37,7 +37,7 @@ public class QuestionProvider {
         return Stream.generate(this::getRandomWord)
             .distinct()
             .limit(getPossibleChoiceCount())
-            .map(wordEntity -> new Word(wordEntity.getQuery(), wordEntity.getResult()))
+            .map(wordEntity -> new Word(wordEntity.getId(), wordEntity.getQuery(), wordEntity.getResult()))
             .collect(Collectors.toList());
     }
 

@@ -26,10 +26,13 @@
         <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/layout/list_row_dictionaries.xml" value="0.5541666666666667" />
         <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/layout/list_row_dictionary.xml" value="0.3125" />
         <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/layout/list_row_dictionary_words.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/layout/list_row_stats.xml" value="0.340625" />
         <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/layout/nav_header_main.xml" value="0.31354166666666666" />
         <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/menu/activity_main_drawer.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/menu/quiz.xml" value="0.31354166666666666" />
         <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/xml/pref_dictionary.xml" value="0.5534420289855072" />
         <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/xml/pref_general.xml" value="0.5534420289855072" />
+        <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/xml/pref_settings.xml" value="0.31354166666666666" />
         <entry key="..\:/Users/kolla/AndroidProjects/OpenQuiz/app/src/main/res/xml/settings.xml" value="0.5534420289855072" />
       </map>
     </option>

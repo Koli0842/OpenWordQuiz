@@ -3,13 +3,14 @@
     android:layout_width="match_parent" >
 
     <Preference
-        android:key="manage_dictionaries"
+        android:key="quiz_settings"
         android:title="@string/pref_header_general"
-        android:fragment="com.koli.openquiz.view.settings.GeneralPreferencesFragment" />
+        android:fragment="com.koli.openquiz.view.settings.QuizPreferencesFragment" />
 
     <Preference
         android:key="manage_dictionaries"
-        android:title="@string/pref_header_dictionary"
-        android:fragment="com.koli.openquiz.view.settings.DictionaryPreferencesFragment" />
+        android:title="@string/pref_header_dictionary" >
+        <intent android:action="com.koli.openquiz.action.OPEN_DICTIONARY_MANAGER" />
+    </Preference>
 
 </PreferenceScreen>

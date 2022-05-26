@@ -7,11 +7,10 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.koli.openquiz.R;
 
-public class DictionaryPreferencesFragment extends PreferenceFragmentCompat {
+public class QuizPreferencesFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
-        addPreferencesFromResource(R.xml.pref_dictionary);
+        addPreferencesFromResource(R.xml.pref_quiz);
     }
-
 }

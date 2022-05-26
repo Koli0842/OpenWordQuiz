@@ -8,18 +8,18 @@ import androidx.room.PrimaryKey;
 import java.util.UUID;
 
 @Entity(foreignKeys = @ForeignKey(entity = WordEntity.class, parentColumns = "id", childColumns = "wordId", onDelete = ForeignKey.CASCADE))
-public class ScoreEntity {
+public class WordStatEntity {
 
     @NonNull
     @PrimaryKey
     private final UUID wordId;
-    private final long answeredTimes;
-    private final long correctTimes;
+    private final long answeredCount;
+    private final long correctCount;
 
-    public ScoreEntity(@NonNull UUID wordId, long answeredTimes, long correctTimes) {
+    public WordStatEntity(@NonNull UUID wordId, long answeredCount, long correctCount) {
         this.wordId = wordId;
-        this.answeredTimes = answeredTimes;
-        this.correctTimes = correctTimes;
+        this.answeredCount = answeredCount;
+        this.correctCount = correctCount;
     }
 
     @NonNull
@@ -27,11 +27,11 @@ public class ScoreEntity {
         return wordId;
     }
 
-    public long getAnsweredTimes() {
-        return answeredTimes;
+    public long getAnsweredCount() {
+        return answeredCount;
     }
 
-    public long getCorrectTimes() {
-        return correctTimes;
+    public long getCorrectCount() {
+        return correctCount;
     }
 }

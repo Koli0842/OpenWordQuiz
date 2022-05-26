@@ -12,7 +12,7 @@ import java.util.UUID;
 @Dao
 public interface WordDao {
 
-    @Query("SELECT * FROM wordentity INNER JOIN (SELECT * FROM dictionarywordmapping WHERE dictionaryId == :dictionaryId) AS dictionariesWithWord ON dictionariesWithWord.wordId == wordId")
+    @Query("SELECT * FROM wordentity INNER JOIN dictionarywordmapping AS dictionariesWithWord ON dictionariesWithWord.wordId == wordEntity.id WHERE dictionariesWithWord.dictionaryId = :dictionaryId")
     List<WordEntity> findAllInDictionary(UUID dictionaryId);
 
     @Insert

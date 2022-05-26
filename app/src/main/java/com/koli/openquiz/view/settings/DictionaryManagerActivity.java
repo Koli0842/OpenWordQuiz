@@ -20,6 +20,7 @@ import com.koli.openquiz.persistence.sql.dao.DictionaryDao;
 import com.koli.openquiz.persistence.sql.entity.DictionaryWithWords;
 import com.koli.openquiz.persistence.sql.repository.DictionaryWithWordsRepository;
 import com.koli.openquiz.util.StorageUtil;
+import com.koli.openquiz.util.moshi.UUIDAdapter;
 import com.koli.openquiz.view.adapter.DictionaryListAdapter;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -51,7 +52,7 @@ public class DictionaryManagerActivity extends AppCompatActivity {
 
         this.storageUtil = new StorageUtil(this);
         this.dictionaryWithWordsRepository = AppDatabase.getInstance(this).dictionaryWithWordsRepository();
-        this.dictionaryJsonAdapter = new Moshi.Builder().build().adapter(Dictionary.class).lenient();
+        this.dictionaryJsonAdapter = new Moshi.Builder().add(new UUIDAdapter()).build().adapter(Dictionary.class).lenient();
         this.dictionaryDao = AppDatabase.getInstance(this).dictionaryDao();
 
         findViewById(R.id.fab).setOnClickListener(view ->
