@@ -22,6 +22,8 @@ public class QuestionProvider {
     private final SettingsProvider settings;
     private final Random random;
 
+    private Question lastQuestion;
+
     public QuestionProvider(Context context, List<WordEntity> words) {
         this.random = new Random();
         this.settings = new SettingsProvider(context);
@@ -30,7 +32,8 @@ public class QuestionProvider {
 
     public Question next() {
         final List<Word> choices = createDistinctChoices();
-        return new Question(chooseQuestion(choices), choices);
+        this.lastQuestion = new Question(chooseQuestion(choices), choices);
+        return lastQuestion;
     }
 
     private List<Word> createDistinctChoices() {
@@ -50,7 +53,13 @@ public class QuestionProvider {
     }
 
     private Word chooseQuestion(List<Word> choices) {
-        return choices.get(random.nextInt(choices.size()));
+        return choices.stream()
+            .filter(this::isNotSameAsLast)
+            .findAny().orElseThrow(() -> new RuntimeException("Generated question has no data. Do you have a single word in a dictionary?"));
+    }
+
+    private boolean isNotSameAsLast(Word word) {
+        return lastQuestion == null || !word.getQuery().equals(lastQuestion.getWord().getQuery());
     }
 
     public List<WordEntity> getWords() {

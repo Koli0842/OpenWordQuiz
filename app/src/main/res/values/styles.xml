@@ -9,6 +9,7 @@
         <item name="colorOnPrimary">@color/cardview_light_background</item>
         <item name="colorSecondary">@color/colorAccent</item>
         <item name="colorOnSecondary">@color/cardview_light_background</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

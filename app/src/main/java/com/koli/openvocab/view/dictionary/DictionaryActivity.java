@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openvocab.R;
@@ -24,10 +25,9 @@ public class DictionaryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dictionary);
 
         this.tts = new TextToSpeech(this, this::initTts);
-
-        setContentView(R.layout.activity_dictionary);
 
         String filename = getIntent().getStringExtra("DICTIONARY");
         WordDao wordDao = AppDatabase.getInstance(this).wordDao();

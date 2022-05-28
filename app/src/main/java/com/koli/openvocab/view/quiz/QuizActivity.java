@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openvocab.R;
@@ -41,6 +42,8 @@ public class QuizActivity extends AppCompatActivity {
     private DictionaryStatsDao dictionaryStatsDao;
     private WordStatsDao wordStatsDao;
 
+    private final Handler handler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +60,8 @@ public class QuizActivity extends AppCompatActivity {
         this.settings = new SettingsProvider(this);
         this.wordStatsDao = AppDatabase.getInstance(this).scoreDao();
         this.dictionaryStatsDao = AppDatabase.getInstance(this).dictionaryStatsDao();
+
+        findViewById(R.id.constraintLayout).setOnClickListener((v) -> skipToNextQuestionWhenAnswered());
 
         nextQuestion();
     }
@@ -77,8 +82,10 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void onAnswerClick(QuizAdapter.ViewHolder view) {
-        if (question.isAnswered())
+        if (question.isAnswered()) {
+            skipToNextQuestionWhenAnswered();
             return;
+        }
 
         question.answer(view.getWord());
         if (question.isCorrect()) {
@@ -106,8 +113,15 @@ public class QuizActivity extends AppCompatActivity {
         });
     }
 
+    private void skipToNextQuestionWhenAnswered() {
+        if(question.isAnswered()) {
+            handler.removeCallbacksAndMessages(null);
+            nextQuestion();
+        }
+    }
+
     private void waitThenGetQuestion() {
-        new Handler().postDelayed(this::nextQuestion, settings.readInt(QuizSettings.WAIT_TIME));
+        handler.postDelayed(this::nextQuestion, settings.readInt(QuizSettings.WAIT_TIME));
     }
 
 }

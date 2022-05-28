@@ -35,8 +35,8 @@
         <activity
             android:name=".view.settings.DictionaryManagerActivity"
             android:label="@string/title_activity_dictionary_manager"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="false">
+            android:exported="false"
+            android:parentActivityName=".view.MainActivity" >
             <intent-filter>
                 <action android:name="com.koli.openvocab.action.OPEN_DICTIONARY_MANAGER" />
 
@@ -45,9 +45,11 @@
         </activity>
         <activity
             android:name=".view.quiz.QuizActivity"
+            android:label="@string/title_activity_quiz"
             android:parentActivityName=".view.MainActivity" />
         <activity
             android:name=".view.dictionary.DictionaryActivity"
+            android:label="@string/title_activity_dictionary"
             android:parentActivityName=".view.MainActivity" />
         <activity
             android:name=".sync.view.login.LoginActivity"

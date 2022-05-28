@@ -47,8 +47,6 @@ public class DictionaryManagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary_manager);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         this.storageUtil = new StorageUtil(this);
         this.dictionaryWithWordsRepository = AppDatabase.getInstance(this).dictionaryWithWordsRepository();
