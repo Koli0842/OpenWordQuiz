@@ -8,13 +8,12 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openvocab.R;
 import com.koli.openvocab.convert.DictionaryImportConverter;
-import com.koli.openvocab.model.Dictionary;
+import com.koli.openvocab.model.DictionaryImport;
 import com.koli.openvocab.persistence.sql.AppDatabase;
 import com.koli.openvocab.persistence.sql.dao.DictionaryDao;
 import com.koli.openvocab.persistence.sql.entity.DictionaryWithWords;
@@ -39,7 +38,7 @@ public class DictionaryManagerActivity extends AppCompatActivity {
 
     private final DictionaryImportConverter dictionaryImportConverter = new DictionaryImportConverter();
     private StorageUtil storageUtil;
-    private JsonAdapter<Dictionary> dictionaryJsonAdapter;
+    private JsonAdapter<DictionaryImport> dictionaryJsonAdapter;
     private DictionaryDao dictionaryDao;
     private DictionaryWithWordsRepository dictionaryWithWordsRepository;
 
@@ -50,7 +49,7 @@ public class DictionaryManagerActivity extends AppCompatActivity {
 
         this.storageUtil = new StorageUtil(this);
         this.dictionaryWithWordsRepository = AppDatabase.getInstance(this).dictionaryWithWordsRepository();
-        this.dictionaryJsonAdapter = new Moshi.Builder().add(new UUIDAdapter()).build().adapter(Dictionary.class).lenient();
+        this.dictionaryJsonAdapter = new Moshi.Builder().add(new UUIDAdapter()).build().adapter(DictionaryImport.class).lenient();
         this.dictionaryDao = AppDatabase.getInstance(this).dictionaryDao();
 
         findViewById(R.id.fab).setOnClickListener(view ->
@@ -72,7 +71,7 @@ public class DictionaryManagerActivity extends AppCompatActivity {
     }
 
     private void importDictionaryAndRequireConfirm(Uri fileUri) {
-        Dictionary dictionary = importDictionary(fileUri);
+        DictionaryImport dictionary = importDictionary(fileUri);
         if (dictionary != null) {
             AddDictionaryDialogFragment dialogFragment = new AddDictionaryDialogFragment(this::storeDictionary, dictionary);
             dialogFragment.show(getSupportFragmentManager(), "addDictionaryDialog");
@@ -80,7 +79,7 @@ public class DictionaryManagerActivity extends AppCompatActivity {
 
     }
 
-    private Dictionary importDictionary(Uri fileUri) {
+    private DictionaryImport importDictionary(Uri fileUri) {
         if (fileUri != null) {
             String fileContent = storageUtil.read(fileUri);
             try {
@@ -92,7 +91,7 @@ public class DictionaryManagerActivity extends AppCompatActivity {
         return null;
     }
 
-    public void storeDictionary(Dictionary dictionary) {
+    public void storeDictionary(DictionaryImport dictionary) {
         DictionaryWithWords dictionaryWithWords = dictionaryImportConverter.toDatabaseEntity(dictionary);
         dictionaryWithWordsRepository.insert(dictionaryWithWords);
         updateDictionaryList();

@@ -11,20 +11,20 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.koli.openvocab.R;
-import com.koli.openvocab.model.Dictionary;
+import com.koli.openvocab.model.DictionaryImport;
 
 public class AddDictionaryDialogFragment extends DialogFragment {
 
     private EditText dictionaryNameText;
 
     public interface Listener {
-        void onConfirmSave(Dictionary dictionary);
+        void onConfirmSave(DictionaryImport dictionary);
     }
 
     private final Listener listener;
-    private final Dictionary importedDictionary;
+    private final DictionaryImport importedDictionary;
 
-    public AddDictionaryDialogFragment(Listener listener, Dictionary importedDictionary) {
+    public AddDictionaryDialogFragment(Listener listener, DictionaryImport importedDictionary) {
         this.listener = listener;
         this.importedDictionary = importedDictionary;
     }

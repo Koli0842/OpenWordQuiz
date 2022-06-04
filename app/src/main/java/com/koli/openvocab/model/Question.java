@@ -18,7 +18,7 @@ public class Question {
 
     public void answer(Word chosenWord) {
         answered = true;
-        correct = word.equals(chosenWord);
+        correct = word.getQuery().equalsIgnoreCase(chosenWord.getQuery()) || word.getResult().equalsIgnoreCase(chosenWord.getResult());
     }
 
     public Word getWord() {

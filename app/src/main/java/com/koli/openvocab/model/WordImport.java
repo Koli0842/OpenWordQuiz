@@ -1,12 +1,8 @@
 package com.koli.openvocab.model;
 
-import com.squareup.moshi.Json;
-
 public class WordImport {
 
-    @Json(name = "Query")
     private final String query;
-    @Json(name = "Result")
     private final String result;
 
     public WordImport(String query, String result) {

@@ -2,7 +2,7 @@ package com.koli.openvocab.sync.service;
 
 import android.content.Context;
 
-import com.koli.openvocab.model.Dictionary;
+import com.koli.openvocab.model.DictionaryImport;
 import com.koli.openvocab.sync.domain.DictionaryInfo;
 
 import org.json.JSONArray;
@@ -83,7 +83,7 @@ public class SyncService {
         storeDictionary(downloadDictionary(id));
     }
 
-    private void storeDictionary(Dictionary dictionary) {
+    private void storeDictionary(DictionaryImport dictionary) {
         //dictionaryStore.store(dictionary.getName(), dictionary.toJson().toString());
     }
 
@@ -120,9 +120,9 @@ public class SyncService {
         return dictionaryInfos;
     }
 
-    public Dictionary downloadDictionary(int id) throws IOException, JSONException {
+    public DictionaryImport downloadDictionary(int id) throws IOException, JSONException {
         LOGGER.log(Level.INFO, "Requested Dictionary with identifier: " + id);
-        Dictionary dictionary = null;
+        DictionaryImport dictionary = null;
 
         URL url = new URL(URL + GET_DICTIONARY_POSTFIX + GET_DICTIONARY_PARAM + id);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -144,7 +144,7 @@ public class SyncService {
         return dictionary;
     }
 
-    public void uploadDictionary(Dictionary dictionary) throws IOException {
+    public void uploadDictionary(DictionaryImport dictionary) throws IOException {
         LOGGER.log(Level.INFO, "Uploading Dictionary" );
 
         URL url = new URL(URL + ADD_DICTIONARY_POSTFIX);

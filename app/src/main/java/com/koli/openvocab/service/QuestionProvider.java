@@ -8,6 +8,8 @@ import com.koli.openvocab.persistence.sql.entity.WordEntity;
 import com.koli.openvocab.settings.QuizSettings;
 import com.koli.openvocab.settings.SettingsProvider;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -53,7 +55,9 @@ public class QuestionProvider {
     }
 
     private Word chooseQuestion(List<Word> choices) {
-        return choices.stream()
+        List<Word> mutableChoices = new ArrayList<>(choices);
+        Collections.shuffle(mutableChoices);
+        return mutableChoices.stream()
             .filter(this::isNotSameAsLast)
             .findAny().orElseThrow(() -> new RuntimeException("Generated question has no data. Do you have a single word in a dictionary?"));
     }

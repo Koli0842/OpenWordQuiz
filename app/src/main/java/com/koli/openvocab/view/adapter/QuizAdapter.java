@@ -23,8 +23,8 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.ViewHolder> {
     }
 
 
-    public QuizAdapter(List<Word> buttons, OnItemClickListener onItemClickListener) {
-        this.choices = buttons;
+    public QuizAdapter(List<Word> choices, OnItemClickListener onItemClickListener) {
+        this.choices = choices;
         this.onItemClickListener = onItemClickListener;
     }
 

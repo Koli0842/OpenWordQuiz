@@ -2,11 +2,11 @@ package com.koli.openvocab.model;
 
 import java.util.List;
 
-public class Dictionary {
+public class DictionaryImport {
 
     private String name;
     private int version;
-    private List<Word> dictionary;
+    private List<WordImport> dictionary;
 
     public String getName() {
         return name;
@@ -24,11 +24,11 @@ public class Dictionary {
         this.version = version;
     }
 
-    public List<Word> getDictionary() {
+    public List<WordImport> getDictionary() {
         return dictionary;
     }
 
-    public void setDictionary(final List<Word> dictionary) {
+    public void setDictionary(final List<WordImport> dictionary) {
         this.dictionary = dictionary;
     }
 

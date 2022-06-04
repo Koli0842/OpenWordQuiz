@@ -1,16 +1,12 @@
 package com.koli.openvocab.model;
 
-import com.squareup.moshi.Json;
-
 import java.util.Objects;
 import java.util.UUID;
 
 public class Word {
 
     private final UUID id;
-    @Json(name = "Query")
     private final String query;
-    @Json(name = "Result")
     private final String result;
 
     public Word(UUID id, String query, String result) {

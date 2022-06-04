@@ -31,10 +31,9 @@ public class DictionaryActivity extends AppCompatActivity {
 
         String filename = getIntent().getStringExtra("DICTIONARY");
         WordDao wordDao = AppDatabase.getInstance(this).wordDao();
-        QuestionProvider questionProvider = new QuestionProvider(this, wordDao.findAllInDictionary(UUID.fromString(filename)));
 
         RecyclerView listView = findViewById(R.id.word_list);
-        WordListAdapter listAdapter = new WordListAdapter(questionProvider.getWords(), view -> {
+        WordListAdapter listAdapter = new WordListAdapter(wordDao.findAllInDictionary(UUID.fromString(filename)), view -> {
             log.info(view.toString());
             CharSequence text = view.getQuery().getText();
             log.info("Speaking " + text);
