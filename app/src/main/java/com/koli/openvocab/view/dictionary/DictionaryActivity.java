@@ -4,13 +4,11 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openvocab.R;
 import com.koli.openvocab.persistence.sql.AppDatabase;
 import com.koli.openvocab.persistence.sql.dao.WordDao;
-import com.koli.openvocab.service.QuestionProvider;
 import com.koli.openvocab.view.adapter.WordListAdapter;
 
 import java.util.Locale;
@@ -29,11 +27,12 @@ public class DictionaryActivity extends AppCompatActivity {
 
         this.tts = new TextToSpeech(this, this::initTts);
 
-        String filename = getIntent().getStringExtra("DICTIONARY");
+        String dictionary = getIntent().getStringExtra("DICTIONARY");
+        UUID dictionaryId = dictionary == null ? null : UUID.fromString(dictionary);
         WordDao wordDao = AppDatabase.getInstance(this).wordDao();
 
         RecyclerView listView = findViewById(R.id.word_list);
-        WordListAdapter listAdapter = new WordListAdapter(wordDao.findAllInDictionary(UUID.fromString(filename)), view -> {
+        WordListAdapter listAdapter = new WordListAdapter(wordDao.findAllInDictionary(dictionaryId), view -> {
             log.info(view.toString());
             CharSequence text = view.getQuery().getText();
             log.info("Speaking " + text);

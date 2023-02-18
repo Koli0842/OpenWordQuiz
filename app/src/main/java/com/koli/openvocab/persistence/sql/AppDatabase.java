@@ -2,6 +2,7 @@ package com.koli.openvocab.persistence.sql;
 
 import android.content.Context;
 
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -20,7 +21,11 @@ import com.koli.openvocab.persistence.sql.entity.WordStatEntity;
 import com.koli.openvocab.persistence.sql.repository.DictionaryWithWordsRepository;
 import com.koli.openvocab.persistence.sql.view.DictionaryWordStatView;
 
-@Database(entities = {WordEntity.class, DictionaryEntity.class, DictionaryWordMapping.class, WordStatEntity.class, DictionaryStatEntity.class}, views = {DictionaryWordStatView.class}, version = 1)
+@Database(entities = {WordEntity.class, DictionaryEntity.class, DictionaryWordMapping.class, WordStatEntity.class, DictionaryStatEntity.class}, views = {DictionaryWordStatView.class},
+    version = 2,
+    autoMigrations = {
+        @AutoMigration(from = 1, to = 2)
+    })
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase database;

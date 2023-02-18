@@ -52,6 +52,8 @@ public class DictionaryManagerActivity extends AppCompatActivity {
         this.dictionaryJsonAdapter = new Moshi.Builder().add(new UUIDAdapter()).build().adapter(DictionaryImport.class).lenient();
         this.dictionaryDao = AppDatabase.getInstance(this).dictionaryDao();
 
+        dictionaryWithWordsRepository.insertMainIfNotPresent();
+
         findViewById(R.id.fab).setOnClickListener(view ->
             loadDictionaryFileIfPermitted());
 

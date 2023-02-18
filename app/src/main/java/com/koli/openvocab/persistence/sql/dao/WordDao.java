@@ -17,6 +17,9 @@ public interface WordDao {
     @Query("SELECT * FROM wordentity INNER JOIN dictionarywordmapping AS dictionariesWithWord ON dictionariesWithWord.wordId == wordEntity.id WHERE dictionariesWithWord.dictionaryId = :dictionaryId")
     List<WordEntity> findAllInDictionary(UUID dictionaryId);
 
+    @Query("SELECT * FROM wordentity")
+    List<WordEntity> findAll();
+
     @Insert
     void insert(WordEntity word);
 

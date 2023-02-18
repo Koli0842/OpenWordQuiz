@@ -12,6 +12,8 @@ import com.koli.openvocab.R;
 import com.koli.openvocab.persistence.sql.entity.DictionaryEntity;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class DictionaryListAdapter extends RecyclerView.Adapter<DictionaryListAdapter.ViewHolder> {
 
@@ -41,7 +43,7 @@ public class DictionaryListAdapter extends RecyclerView.Adapter<DictionaryListAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DictionaryEntity dictionaryEntity = dictionaries.get(position);
         holder.getDictionary().setText(dictionaryEntity.getName());
-        holder.getDictionary().setTag(dictionaryEntity.getId().toString());
+        holder.getDictionary().setTag(Optional.ofNullable(dictionaryEntity.getId()).map(UUID::toString).orElse(null));
     }
 
     @Override

@@ -13,10 +13,12 @@ public class DictionaryEntity {
     @PrimaryKey
     private final UUID id;
     private final String name;
+    private final Integer ordinal;
 
-    public DictionaryEntity(@NonNull UUID id, String name) {
+    public DictionaryEntity(@NonNull UUID id, String name, Integer ordinal) {
         this.id = id;
         this.name = name;
+        this.ordinal = ordinal;
     }
 
     @NonNull
@@ -26,5 +28,9 @@ public class DictionaryEntity {
 
     public String getName() {
         return name;
+    }
+
+    public Integer getOrdinal() {
+        return ordinal;
     }
 }

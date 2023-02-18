@@ -3,7 +3,6 @@ package com.koli.openvocab.convert;
 import androidx.annotation.NonNull;
 
 import com.koli.openvocab.model.DictionaryImport;
-import com.koli.openvocab.model.Word;
 import com.koli.openvocab.model.WordImport;
 import com.koli.openvocab.persistence.sql.entity.DictionaryEntity;
 import com.koli.openvocab.persistence.sql.entity.DictionaryWithWords;
@@ -22,7 +21,7 @@ public class DictionaryImportConverter {
     }
 
     private DictionaryEntity toDictionaryEntity(DictionaryImport dictionary) {
-        return new DictionaryEntity(UUID.randomUUID(), dictionary.getName());
+        return new DictionaryEntity(UUID.randomUUID(), dictionary.getName(), null);
     }
 
     private WordEntity toWordEntity(WordImport word) {
