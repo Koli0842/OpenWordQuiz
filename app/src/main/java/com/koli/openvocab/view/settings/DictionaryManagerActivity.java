@@ -67,7 +67,7 @@ public class DictionaryManagerActivity extends AppCompatActivity {
     }
 
     private void launchImportDictionaryFlow() {
-        importDictionaryFlowLauncher.launch("*/*");
+        importDictionaryFlowLauncher.launch("application/json");
     }
 
     private void importDictionaryAndRequireConfirm(Uri fileUri) {
