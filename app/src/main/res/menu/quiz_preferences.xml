@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/quiz_preferences_written"
+        android:checkable="true"
+        android:titleCondensed="Written"
+        android:title="Written"
+        app:showAsAction="never" />
+    <item android:id="@+id/quiz_preferences_verbal"
+        android:checkable="true"
+        android:titleCondensed="Verbal"
+        android:title="Verbal"
+        app:showAsAction="never" />
+
+</menu>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <androidx.preference.CheckBoxPreference
+        android:key="pref_quiz_textual_enabled"
+        android:defaultValue="@bool/default_quiz_textual_enabled"
+        android:title="Textual" />
+    <androidx.preference.CheckBoxPreference
+        android:key="pref_quiz_verbal_enabled"
+        android:defaultValue="@bool/default_quiz_verbal_enabled"
+        android:title="Verbal" />
+
+</androidx.preference.PreferenceScreen>

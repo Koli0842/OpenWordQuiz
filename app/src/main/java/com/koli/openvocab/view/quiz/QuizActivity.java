@@ -3,6 +3,7 @@ package com.koli.openvocab.view.quiz;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -19,14 +20,24 @@ import com.koli.openvocab.persistence.sql.dao.WordDao;
 import com.koli.openvocab.persistence.sql.dao.WordStatsDao;
 import com.koli.openvocab.service.QuestionProvider;
 import com.koli.openvocab.settings.QuizSettings;
+import com.koli.openvocab.settings.QuizTypeSettings;
 import com.koli.openvocab.settings.SettingsProvider;
 import com.koli.openvocab.view.adapter.QuizAdapter;
+import com.koli.openvocab.view.dictionary.DictionaryActivity;
 
+import java.util.Locale;
+import java.util.Random;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 public class QuizActivity extends AppCompatActivity {
 
+    private final Logger log = Logger.getLogger(DictionaryActivity.class.getName());
+    private final Handler handler = new Handler();
+    private final Random random = new Random();
+
+    private TextToSpeech tts;
     private TextView questionView;
     private RecyclerView answerView;
 
@@ -40,8 +51,6 @@ public class QuizActivity extends AppCompatActivity {
 
     private DictionaryStatsDao dictionaryStatsDao;
     private WordStatsDao wordStatsDao;
-
-    private final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,21 +71,52 @@ public class QuizActivity extends AppCompatActivity {
 
         findViewById(R.id.constraintLayout).setOnClickListener((v) -> skipToNextQuestionWhenAnswered());
 
+        this.tts = new TextToSpeech(this, this::initTts);
+
         nextQuestion();
+    }
+
+    private void initTts(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            if (tts.setLanguage(Locale.UK) == TextToSpeech.SUCCESS) {
+                log.info("Initialized TTS");
+            } else {
+                log.info("Failed to set language");
+            }
+        } else {
+            log.info("Failed to initialize TTS");
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.quiz, menu);
+        getMenuInflater().inflate(R.menu.quiz_counters, menu);
         streakItem = menu.findItem(R.id.streak);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tts.shutdown();
     }
 
     private void nextQuestion() {
         question = questionProvider.next();
         QuizAdapter quizAdapter = new QuizAdapter(question.getChoices(), this::onAnswerClick);
 
-        questionView.setText(question.getWord().getQuery());
+        boolean textual = settings.readBoolean(QuizTypeSettings.TEXTUAL_ENABLED);
+        boolean verbal = settings.readBoolean(QuizTypeSettings.VERBAL_ENABLED);
+
+        if (textual && verbal) {
+            questionView.setText(random.nextInt(2) == 0 ? question.getWord().getQuery() : "\uD83D\uDD0A");
+        } else if (textual) {
+            questionView.setText(question.getWord().getQuery());
+        } else if (verbal) {
+            questionView.setText("\uD83D\uDD0A");
+        }
+
+        questionView.setOnClickListener(v -> tts.speak(question.getWord().getQuery(), TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString()));
         answerView.setAdapter(quizAdapter);
     }
 

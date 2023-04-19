@@ -2,7 +2,8 @@ package com.koli.openvocab.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import androidx.preference.PreferenceManager;
 
 public class SettingsProvider {
 
@@ -20,6 +21,11 @@ public class SettingsProvider {
 
     public int readInt(SettingKey setting) {
         return Integer.parseInt(readString(setting));
+    }
+
+    public boolean readBoolean(SettingKey setting) {
+        return preferences.getBoolean(setting.preferenceKey(),
+            context.getResources().getBoolean(setting.defaultKey()));
     }
 
     private String readString(SettingKey setting) {

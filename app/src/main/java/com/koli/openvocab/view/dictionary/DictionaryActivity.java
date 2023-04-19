@@ -33,9 +33,7 @@ public class DictionaryActivity extends AppCompatActivity {
 
         RecyclerView listView = findViewById(R.id.word_list);
         WordListAdapter listAdapter = new WordListAdapter(wordDao.findAllInDictionary(dictionaryId), view -> {
-            log.info(view.toString());
             CharSequence text = view.getQuery().getText();
-            log.info("Speaking " + text);
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString());
         });
 

@@ -4,4 +4,8 @@
     <string name="choice_count_key">choice_count</string>
     <string name="default_wait_time">2000</string>
     <string name="default_choice_count">4</string>
+    <string name="quiz_textual_enabled_key">quiz_textual_enabled</string>
+    <string name="quiz_verbal_enabled_key">quiz_verbal_enabled</string>
+    <bool name="default_quiz_textual_enabled">true</bool>
+    <bool name="default_quiz_verbal_enabled">true</bool>
 </resources>
