@@ -8,4 +8,6 @@
     <string name="quiz_verbal_enabled_key">quiz_verbal_enabled</string>
     <bool name="default_quiz_textual_enabled">true</bool>
     <bool name="default_quiz_verbal_enabled">true</bool>
+    <string name="quiz_verbal_frequency">quiz_verbal_frequency</string>
+    <integer name="default_quiz_verbal_frequency">25</integer>
 </resources>

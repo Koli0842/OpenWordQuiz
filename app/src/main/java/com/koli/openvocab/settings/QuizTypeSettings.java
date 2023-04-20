@@ -5,7 +5,8 @@ import com.koli.openvocab.R;
 public enum QuizTypeSettings implements SettingKey {
 
     TEXTUAL_ENABLED("quiz_textual_enabled", R.bool.default_quiz_textual_enabled, Boolean.class),
-    VERBAL_ENABLED("quiz_verbal_enabled", R.bool.default_quiz_verbal_enabled, Boolean.class);
+    VERBAL_ENABLED("quiz_verbal_enabled", R.bool.default_quiz_verbal_enabled, Boolean.class),
+    VERBAL_FREQUENCY("quiz_verbal_frequency", R.integer.default_quiz_verbal_frequency, Integer.class);
 
     private final String key;
     private final int defaultKey;

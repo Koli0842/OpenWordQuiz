@@ -4,12 +4,19 @@
     android:layout_width="match_parent">
 
     <androidx.preference.CheckBoxPreference
-        android:key="pref_quiz_textual_enabled"
+        android:key="@string/quiz_textual_enabled_key"
         android:defaultValue="@bool/default_quiz_textual_enabled"
-        android:title="Textual" />
+        android:title="Textual"
+        android:summary="If enabled, textual quiz will be shown" />
     <androidx.preference.CheckBoxPreference
-        android:key="pref_quiz_verbal_enabled"
+        android:key="@string/quiz_verbal_enabled_key"
         android:defaultValue="@bool/default_quiz_verbal_enabled"
-        android:title="Verbal" />
+        android:title="Verbal"
+        android:summary="If enabled, verbal quiz will be shown"/>
+    <androidx.preference.SeekBarPreference
+        android:key="@string/quiz_verbal_frequency"
+        android:max="100"
+        android:defaultValue="@integer/default_quiz_verbal_frequency"
+        android:title="Verbal Frequency" />
 
 </androidx.preference.PreferenceScreen>

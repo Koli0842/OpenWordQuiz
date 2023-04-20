@@ -12,5 +12,6 @@ public class QuizPreferencesFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
         addPreferencesFromResource(R.xml.pref_quiz);
+        addPreferencesFromResource(R.xml.pref_quiz_types);
     }
 }

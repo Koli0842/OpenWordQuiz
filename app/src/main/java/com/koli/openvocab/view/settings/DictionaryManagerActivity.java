@@ -3,6 +3,7 @@ package com.koli.openvocab.view.settings;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -62,6 +63,8 @@ public class DictionaryManagerActivity extends AppCompatActivity {
 
     private void loadDictionaryFileIfPermitted() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            launchImportDictionaryFlow();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
             launchImportDictionaryFlow();
         } else {
             checkPermissionAndLaunchImportDictionaryFlowLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);

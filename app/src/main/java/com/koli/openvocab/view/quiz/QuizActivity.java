@@ -109,11 +109,15 @@ public class QuizActivity extends AppCompatActivity {
         boolean verbal = settings.readBoolean(QuizTypeSettings.VERBAL_ENABLED);
 
         if (textual && verbal) {
-            questionView.setText(random.nextInt(2) == 0 ? question.getWord().getQuery() : "\uD83D\uDD0A");
+            questionView.setText(random.nextInt(100) > settings.readInt(QuizTypeSettings.VERBAL_FREQUENCY) ? question.getWord().getQuery() : "\uD83D\uDD0A");
         } else if (textual) {
             questionView.setText(question.getWord().getQuery());
         } else if (verbal) {
             questionView.setText("\uD83D\uDD0A");
+        }
+
+        if ("\uD83D\uDD0A".contentEquals(questionView.getText())) {
+            tts.speak(question.getWord().getQuery(), TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString());
         }
 
         questionView.setOnClickListener(v -> tts.speak(question.getWord().getQuery(), TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString()));

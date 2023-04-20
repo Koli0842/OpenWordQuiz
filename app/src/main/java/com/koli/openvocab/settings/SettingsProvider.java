@@ -20,7 +20,9 @@ public class SettingsProvider {
     }
 
     public int readInt(SettingKey setting) {
-        return Integer.parseInt(readString(setting));
+        return setting.getClazz() == String.class ? Integer.parseInt(readString(setting)) :
+            preferences.getInt(setting.preferenceKey(),
+            context.getResources().getInteger(setting.defaultKey()));
     }
 
     public boolean readBoolean(SettingKey setting) {

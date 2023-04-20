@@ -4,14 +4,14 @@ import com.koli.openvocab.R;
 
 public enum QuizSettings implements SettingKey {
 
-    WAIT_TIME("wait_time", R.string.default_wait_time, Integer.class),
-    CHOICE_COUNT("choice_count", R.string.default_choice_count, Integer.class);
+    WAIT_TIME("wait_time", R.string.default_wait_time, String.class),
+    CHOICE_COUNT("choice_count", R.string.default_choice_count, String.class);
 
     private final String key;
     private final int defaultKey;
-    private final Class<Integer> clazz;
+    private final Class<?> clazz;
 
-    QuizSettings(String key, int defaultKey, Class<Integer> clazz) {
+    QuizSettings(String key, int defaultKey, Class<?> clazz) {
         this.key = key;
         this.defaultKey = defaultKey;
         this.clazz = clazz;
