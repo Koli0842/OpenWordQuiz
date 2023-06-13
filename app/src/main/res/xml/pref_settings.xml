@@ -13,4 +13,9 @@
         <intent android:action="com.koli.openvocab.action.OPEN_DICTIONARY_MANAGER" />
     </Preference>
 
+    <Preference
+        android:key="manage_words"
+        android:title="Manage Words"
+        android:fragment="com.koli.openvocab.view.settings.words.ManageWordListFragment" />
+
 </PreferenceScreen>

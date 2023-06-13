@@ -12,9 +12,9 @@ public class WordEntity {
 
     @NonNull
     @PrimaryKey
-    private final UUID id;
-    private final String query;
-    private final String result;
+    private UUID id;
+    private String query;
+    private String result;
 
     public WordEntity(@NonNull UUID id, String query, String result) {
         this.id = id;
@@ -33,6 +33,18 @@ public class WordEntity {
 
     public String getResult() {
         return result;
+    }
+
+    public void setId(@NonNull UUID id) {
+        this.id = id;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 
     @Override

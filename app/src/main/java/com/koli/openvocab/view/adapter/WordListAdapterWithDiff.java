@@ -1,30 +1,39 @@
 package com.koli.openvocab.view.adapter;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openvocab.R;
 import com.koli.openvocab.persistence.sql.entity.WordEntity;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
-public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHolder> {
+public class WordListAdapterWithDiff extends ListAdapter<WordEntity, WordListAdapterWithDiff.ViewHolder> {
 
-    private final List<WordEntity> words;
     private final OnItemClickListener onItemClickListener;
+    private final OnItemContextMenuClickListener contextMenuItemListener;
 
     public interface OnItemClickListener {
-        void onClick(ViewHolder v);
+        void onClick(ViewHolder viewHolder);
     }
 
-    public WordListAdapter(List<WordEntity> words, OnItemClickListener onItemClickListener) {
-        this.words = words;
+    public interface OnItemContextMenuClickListener {
+        boolean onClick(MenuItem menuItem, ViewHolder viewHolder);
+    }
+
+    public WordListAdapterWithDiff(OnItemClickListener onItemClickListener, OnItemContextMenuClickListener contextMenuItemListener) {
+        super(new WordDiff());
         this.onItemClickListener = onItemClickListener;
+        this.contextMenuItemListener = contextMenuItemListener;
     }
 
     @NonNull
@@ -34,19 +43,25 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHo
             .inflate(R.layout.list_row_dictionary_words, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(v -> onItemClickListener.onClick(viewHolder));
+        view.setOnCreateContextMenuListener((menu, v, menuInfo) -> menu.add(0, 0, 0, "Delete").setOnMenuItemClickListener(item -> contextMenuItemListener.onClick(item, viewHolder)));
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setEntity(words.get(position));
-        holder.getQuery().setText(words.get(position).getQuery());
-        holder.getResult().setText(words.get(position).getResult());
+        holder.bindTo(getItem(position));
     }
 
-    @Override
-    public int getItemCount() {
-        return words.size();
+    public static class WordDiff extends DiffUtil.ItemCallback<WordEntity> {
+        @Override
+        public boolean areItemsTheSame(@NonNull WordEntity oldItem, @NonNull WordEntity newItem){
+            return oldItem.getId().equals(newItem.getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull WordEntity oldItem, @NonNull WordEntity newItem){
+            return newItem.equals(oldItem);
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -62,6 +77,12 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHo
             this.result = itemView.findViewById(R.id.dictionary_item_result);
         }
 
+        public void bindTo(WordEntity entity) {
+            this.entity = entity;
+            this.query.setText(entity.getQuery());
+            this.result.setText(entity.getResult());
+        }
+
         public TextView getQuery() {
             return query;
         }
@@ -74,9 +95,6 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHo
             return entity;
         }
 
-        public void setEntity(WordEntity entity) {
-            this.entity = entity;
-        }
     }
 
 }
