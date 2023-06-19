@@ -20,13 +20,13 @@ public class QuestionProvider {
 
     private final Logger log = Logger.getLogger(QuestionProvider.class.getName());
 
-    private final List<WordEntity> words;
+    private final List<Word> words;
     private final SettingsProvider settings;
     private final Random random;
 
     private Question lastQuestion;
 
-    public QuestionProvider(Context context, List<WordEntity> words) {
+    public QuestionProvider(Context context, List<Word> words) {
         this.random = new Random();
         this.settings = new SettingsProvider(context);
         this.words = words;
@@ -42,11 +42,10 @@ public class QuestionProvider {
         return Stream.generate(this::getRandomWord)
             .distinct()
             .limit(getPossibleChoiceCount())
-            .map(wordEntity -> new Word(wordEntity.getId(), wordEntity.getQuery(), wordEntity.getResult()))
             .collect(Collectors.toList());
     }
 
-    private WordEntity getRandomWord() {
+    private Word getRandomWord() {
         return words.get(random.nextInt(words.size()));
     }
 
@@ -66,7 +65,7 @@ public class QuestionProvider {
         return lastQuestion == null || !word.getQuery().equals(lastQuestion.getWord().getQuery());
     }
 
-    public List<WordEntity> getWords() {
+    public List<Word> getWords() {
         return words;
     }
 }

@@ -6,11 +6,21 @@
     android:padding="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
 
+    <Spinner
+        android:id="@+id/query_locale_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <EditText
         android:id="@+id/word_query"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"/>
+
+    <Spinner
+        android:id="@+id/result_locale_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/word_result"

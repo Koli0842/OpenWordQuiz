@@ -9,9 +9,8 @@
 
     <Preference
         android:key="manage_dictionaries"
-        android:title="@string/pref_header_dictionary" >
-        <intent android:action="com.koli.openvocab.action.OPEN_DICTIONARY_MANAGER" />
-    </Preference>
+        android:title="@string/pref_header_dictionary"
+        android:fragment="com.koli.openvocab.view.settings.dictionaries.ManageDictionariesFragment" />
 
     <Preference
         android:key="manage_words"

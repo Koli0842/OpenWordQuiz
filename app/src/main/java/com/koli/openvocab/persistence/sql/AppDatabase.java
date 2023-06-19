@@ -22,9 +22,10 @@ import com.koli.openvocab.persistence.sql.repository.DictionaryWithWordsReposito
 import com.koli.openvocab.persistence.sql.view.DictionaryWordStatView;
 
 @Database(entities = {WordEntity.class, DictionaryEntity.class, DictionaryWordMapping.class, WordStatEntity.class, DictionaryStatEntity.class}, views = {DictionaryWordStatView.class},
-    version = 2,
+    version = 3,
     autoMigrations = {
-        @AutoMigration(from = 1, to = 2)
+        @AutoMigration(from = 1, to = 2),
+        @AutoMigration(from = 2, to = 3)
     })
 public abstract class AppDatabase extends RoomDatabase {
 

@@ -31,12 +31,13 @@ public class DictionarySelectionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         RecyclerView dictionaryList = view.findViewById(R.id.dictionary_list);
 
-        DictionaryListAdapter listAdapter = new DictionaryListAdapter(dictionaryDao.findAll(), v -> {
+        DictionaryListAdapter listAdapter = new DictionaryListAdapter(v -> {
             Intent intent = new Intent(context, DictionaryActivity.class);
-            intent.putExtra("DICTIONARY", (String) v.getDictionary().getTag());
+            intent.putExtra("DICTIONARY", (String) v.getName().getTag());
             startActivity(intent);
-        });
+        }, (vh, item) -> false);
         dictionaryList.setAdapter(listAdapter);
+        listAdapter.submitList(dictionaryDao.findAll());
     }
 
     @Override

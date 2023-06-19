@@ -1,4 +1,4 @@
-package com.koli.openvocab.view.settings;
+package com.koli.openvocab.view.settings.dictionaries;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -11,39 +11,42 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.koli.openvocab.R;
-import com.koli.openvocab.model.DictionaryImport;
+import com.koli.openvocab.persistence.sql.entity.DictionaryEntity;
+import com.koli.openvocab.persistence.sql.entity.WordEntity;
 
-public class AddDictionaryDialogFragment extends DialogFragment {
+import java.util.UUID;
+
+public class SaveDictionaryDialogFragment extends DialogFragment {
 
     private EditText dictionaryNameText;
 
     public interface Listener {
-        void onConfirmSave(DictionaryImport dictionary);
+        void onConfirmSave(DictionaryEntity dictionary);
     }
 
     private final Listener listener;
-    private final DictionaryImport importedDictionary;
+    private final DictionaryEntity dictionaryEntity;
 
-    public AddDictionaryDialogFragment(Listener listener, DictionaryImport importedDictionary) {
+    public SaveDictionaryDialogFragment(Listener listener, DictionaryEntity dictionaryEntity) {
         this.listener = listener;
-        this.importedDictionary = importedDictionary;
+        this.dictionaryEntity = dictionaryEntity;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstance) {
         super.onCreateDialog(savedInstance);
-        View view = getLayoutInflater().inflate(R.layout.fragment_dialog_add_dictionary, null);
+        View view = getLayoutInflater().inflate(R.layout.fragment_dialog_save_dictionary, null);
         this.dictionaryNameText = view.findViewById(R.id.dictionary_add_name);
 
-        dictionaryNameText.setText(importedDictionary.getName());
+        dictionaryNameText.setText(dictionaryEntity.getName());
 
         return new AlertDialog.Builder(requireActivity())
             .setView(view)
+            .setTitle(dictionaryEntity.getId().toString())
             .setPositiveButton("Save", (dialog, which) -> {
-                importedDictionary.setName(dictionaryNameText.getText().toString());
-                listener.onConfirmSave(importedDictionary);
-                getParentFragmentManager().popBackStack();
+                String dictionaryName = dictionaryNameText.getText().toString();
+                listener.onConfirmSave(new DictionaryEntity(dictionaryEntity.getId(), dictionaryName, dictionaryEntity.getOrdinal()));
             })
             .create();
     }

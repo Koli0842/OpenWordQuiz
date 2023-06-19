@@ -33,17 +33,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.settings.DictionaryManagerActivity"
-            android:label="@string/title_activity_dictionary_manager"
-            android:exported="false"
-            android:parentActivityName=".view.MainActivity" >
-            <intent-filter>
-                <action android:name="com.koli.openvocab.action.OPEN_DICTIONARY_MANAGER" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".view.quiz.QuizActivity"
             android:label="@string/title_activity_quiz"
             android:parentActivityName=".view.MainActivity" />

@@ -1,8 +1,10 @@
 package com.koli.openvocab.persistence.sql.dao;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.koli.openvocab.persistence.sql.entity.DictionaryEntity;
 
@@ -24,7 +26,13 @@ public interface DictionaryDao {
     @Query("SELECT * FROM dictionaryentity ORDER BY ordinal")
     List<DictionaryEntity> findAll();
 
+    @Update
+    void update(DictionaryEntity dictionary);
+
     @Insert
     void insert(DictionaryEntity dictionary);
+
+    @Delete
+    void delete(DictionaryEntity dictionary);
 
 }

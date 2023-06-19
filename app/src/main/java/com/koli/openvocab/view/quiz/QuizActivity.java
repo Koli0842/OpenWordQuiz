@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.koli.openvocab.R;
 import com.koli.openvocab.model.Question;
 import com.koli.openvocab.model.StreakCounter;
+import com.koli.openvocab.model.Word;
 import com.koli.openvocab.persistence.sql.AppDatabase;
 import com.koli.openvocab.persistence.sql.dao.DictionaryStatsDao;
 import com.koli.openvocab.persistence.sql.dao.WordDao;
@@ -29,6 +30,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class QuizActivity extends AppCompatActivity {
@@ -59,7 +61,7 @@ public class QuizActivity extends AppCompatActivity {
 
         UUID dictionaryId = UUID.fromString(getIntent().getStringExtra("DICTIONARY"));
         WordDao wordDao = AppDatabase.getInstance(this).wordDao();
-        this.questionProvider = new QuestionProvider(this, wordDao.findAllInDictionary(dictionaryId));
+        this.questionProvider = new QuestionProvider(this, wordDao.findAllInDictionary(dictionaryId).stream().map(Word::fromEntity).collect(Collectors.toList()));
         this.streakCounter = new StreakCounter(dictionaryId);
 
         questionView = findViewById(R.id.question_view);
@@ -117,6 +119,7 @@ public class QuizActivity extends AppCompatActivity {
         }
 
         if ("\uD83D\uDD0A".contentEquals(questionView.getText())) {
+            tts.setLanguage(question.getWord().getQueryLocale());
             tts.speak(question.getWord().getQuery(), TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString());
         }
 
