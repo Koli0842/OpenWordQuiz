@@ -6,8 +6,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,8 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.koli.openvocab.R;
-import com.koli.openvocab.convert.DictionaryImportConverter;
-import com.koli.openvocab.model.DictionaryImport;
+import com.koli.openvocab.convert.DictionaryJsonConverter;
+import com.koli.openvocab.model.json.DictionaryJson;
 import com.koli.openvocab.persistence.sql.AppDatabase;
 import com.koli.openvocab.persistence.sql.dao.DictionaryDao;
 import com.koli.openvocab.persistence.sql.entity.DictionaryEntity;
@@ -37,21 +37,23 @@ import java.util.UUID;
 
 public class ManageDictionariesFragment extends Fragment {
 
-    private final ActivityResultLauncher<String> importDictionaryFlowLauncher =
-        registerForActivityResult(new ActivityResultContracts.GetContent(), this::importDictionaryAndRequireConfirm);
+    private final ActivityResultLauncher<String> importWhenPermissionCheckPassed = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        if (isGranted) {
+            launchImportDictionaryFlow();
+        }
+    });
+    private final ActivityResultLauncher<String> importDictionary = registerForActivityResult(new ActivityResultContracts.GetContent(), this::importDictionaryAndRequireConfirm);
+    private final ActivityResultLauncher<String> exportDictionary = registerForActivityResult(new ActivityResultContracts.CreateDocument("application/json"),
+        this::saveExportDictionaryFile);
 
-    private final ActivityResultLauncher<String> checkPermissionAndLaunchImportDictionaryFlowLauncher =
-        registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) launchImportDictionaryFlow();
-        });
-
-    private final DictionaryImportConverter dictionaryImportConverter = new DictionaryImportConverter();
+    private final DictionaryJsonConverter dictionaryJsonConverter = new DictionaryJsonConverter();
     private StorageUtil storageUtil;
-    private JsonAdapter<DictionaryImport> dictionaryJsonAdapter;
+    private JsonAdapter<DictionaryJson> dictionaryJsonAdapter;
     private DictionaryDao dictionaryDao;
     private DictionaryWithWordsRepository dictionaryWithWordsRepository;
     private RecyclerView dictionaryList;
     private DictionaryListAdapter dictionaryListAdapter;
+    private String contentToExport;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,36 +70,52 @@ public class ManageDictionariesFragment extends Fragment {
         view.findViewById(R.id.fab_import).setOnClickListener(v ->
             loadDictionaryFileIfPermitted());
         view.findViewById(R.id.fab_add).setOnClickListener(v -> {
-                SaveDictionaryDialogFragment saveDictionaryDialogFragment = new SaveDictionaryDialogFragment(this::insertDictionary, new DictionaryEntity(UUID.randomUUID(), null, null));
-                saveDictionaryDialogFragment.show(getParentFragmentManager(), "SaveDictionaryDialog");
-            });
+            SaveDictionaryDialogFragment saveDictionaryDialogFragment = new SaveDictionaryDialogFragment(this::insertDictionary, new DictionaryEntity(UUID.randomUUID(), null, null));
+            saveDictionaryDialogFragment.show(getParentFragmentManager(), "SaveDictionaryDialog");
+        });
 
         dictionaryListAdapter = new DictionaryListAdapter(v -> {
             ManageWordsInDictionaryListFragment fragment = new ManageWordsInDictionaryListFragment(v.getEntity());
             getParentFragmentManager().beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .replace(R.id.content_frame, fragment).addToBackStack(null).commit();
-        }, this::handleMenuItemSelected);
+        }, this::createListItemContextMenu);
         dictionaryList.setAdapter(dictionaryListAdapter);
         dictionaryListAdapter.submitList(dictionaryDao.findAll());
     }
 
+    private void createListItemContextMenu(ContextMenu menu, DictionaryListAdapter.ViewHolder viewHolder) {
+        menu.add(0, 0, 0, "Edit").setOnMenuItemClickListener(item -> {
+            SaveDictionaryDialogFragment saveDictionaryDialogFragment = new SaveDictionaryDialogFragment(this::saveDictionary, viewHolder.getEntity());
+            saveDictionaryDialogFragment.show(getParentFragmentManager(), "SaveDictionaryDialog");
+            return true;
+        });
+        menu.add(0, 1, 0, "Delete").setOnMenuItemClickListener(item -> {
+            deleteDictionary(viewHolder);
+            return true;
+        });
+        menu.add(0, 2, 0, "Export").setOnMenuItemClickListener(item -> {
+            exportDictionary(viewHolder);
+            return true;
+        });
+    }
+
     private void loadDictionaryFileIfPermitted() {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
             launchImportDictionaryFlow();
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
+        } else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             launchImportDictionaryFlow();
         } else {
-            checkPermissionAndLaunchImportDictionaryFlowLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+            importWhenPermissionCheckPassed.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
     }
 
     private void launchImportDictionaryFlow() {
-        importDictionaryFlowLauncher.launch("application/json");
+        importDictionary.launch("application/json");
     }
 
     private void importDictionaryAndRequireConfirm(Uri fileUri) {
-        DictionaryImport dictionary = importDictionary(fileUri);
+        DictionaryJson dictionary = importDictionary(fileUri);
         if (dictionary != null) {
             AddDictionaryDialogFragment dialogFragment = new AddDictionaryDialogFragment(this::storeDictionary, dictionary);
             dialogFragment.show(getParentFragmentManager(), "addDictionaryDialog");
@@ -105,7 +123,7 @@ public class ManageDictionariesFragment extends Fragment {
 
     }
 
-    private DictionaryImport importDictionary(Uri fileUri) {
+    private DictionaryJson importDictionary(Uri fileUri) {
         if (fileUri != null) {
             String fileContent = storageUtil.read(fileUri);
             try {
@@ -117,22 +135,23 @@ public class ManageDictionariesFragment extends Fragment {
         return null;
     }
 
-    public void storeDictionary(DictionaryImport dictionary) {
-        DictionaryWithWords dictionaryWithWords = dictionaryImportConverter.toDatabaseEntity(dictionary);
+    public void storeDictionary(DictionaryJson dictionary) {
+        DictionaryWithWords dictionaryWithWords = dictionaryJsonConverter.toDatabaseEntity(dictionary);
         dictionaryWithWordsRepository.insert(dictionaryWithWords);
         dictionaryListAdapter.submitList(dictionaryDao.findAll());
     }
 
-    private boolean handleMenuItemSelected(MenuItem item, DictionaryListAdapter.ViewHolder viewHolder) {
-        if (item.getItemId() == 0) {
-            SaveDictionaryDialogFragment saveDictionaryDialogFragment = new SaveDictionaryDialogFragment(this::saveDictionary, viewHolder.getEntity());
-            saveDictionaryDialogFragment.show(getParentFragmentManager(), "SaveDictionaryDialog");
-            return true;
-        } else if (item.getItemId() == 1) {
-            deleteDictionary(viewHolder);
-            return true;
-        } else {
-            return false;
+
+    private void exportDictionary(DictionaryListAdapter.ViewHolder viewHolder) {
+        DictionaryWithWords dictionaryWithWords = dictionaryWithWordsRepository.findById(viewHolder.getEntity().getId());
+        DictionaryJson dictionaryJson = dictionaryJsonConverter.fromDatabaseEntity(dictionaryWithWords);
+        contentToExport = dictionaryJsonAdapter.toJson(dictionaryJson);
+        exportDictionary.launch(viewHolder.getEntity().getName());
+    }
+
+    private void saveExportDictionaryFile(Uri uri) {
+        if (uri != null) {
+            storageUtil.write(uri, contentToExport);
         }
     }
 
@@ -157,7 +176,7 @@ public class ManageDictionariesFragment extends Fragment {
 
         this.storageUtil = new StorageUtil(getContext());
         this.dictionaryWithWordsRepository = AppDatabase.getInstance(getContext()).dictionaryWithWordsRepository();
-        this.dictionaryJsonAdapter = new Moshi.Builder().add(new UUIDAdapter()).build().adapter(DictionaryImport.class).lenient();
+        this.dictionaryJsonAdapter = new Moshi.Builder().add(new UUIDAdapter()).build().adapter(DictionaryJson.class).lenient();
         this.dictionaryDao = AppDatabase.getInstance(getContext()).dictionaryDao();
     }
 

@@ -2,9 +2,7 @@ package com.koli.openvocab.model;
 
 import com.koli.openvocab.persistence.sql.entity.WordEntity;
 
-import java.util.Locale;
 import java.util.Objects;
-import java.util.UUID;
 
 public class CheckedWord {
 

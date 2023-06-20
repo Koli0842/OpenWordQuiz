@@ -1,12 +1,12 @@
-package com.koli.openvocab.model;
+package com.koli.openvocab.model.json;
 
 import java.util.List;
 
-public class DictionaryImport {
+public class DictionaryJson {
 
     private String name;
     private int version;
-    private List<WordImport> dictionary;
+    private List<WordJson> dictionary;
 
     public String getName() {
         return name;
@@ -24,11 +24,11 @@ public class DictionaryImport {
         this.version = version;
     }
 
-    public List<WordImport> getDictionary() {
+    public List<WordJson> getDictionary() {
         return dictionary;
     }
 
-    public void setDictionary(final List<WordImport> dictionary) {
+    public void setDictionary(final List<WordJson> dictionary) {
         this.dictionary = dictionary;
     }
 

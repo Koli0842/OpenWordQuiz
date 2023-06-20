@@ -2,6 +2,7 @@ package com.koli.openvocab.view.settings.words;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,14 +46,7 @@ public class ManageWordListFragment extends Fragment {
         wordListAdapter = new WordListAdapter(v -> {
             SaveWordFragment saveWordFragment = new SaveWordFragment(this::saveWord, v.getEntity().toEntity());
             saveWordFragment.show(getParentFragmentManager(), "saveWordDialog");
-        }, (item, v) -> {
-            if (item.getItemId() == 0) {
-                deleteWord(v);
-                return true;
-            } else {
-                return false;
-            }
-        });
+        }, this::createListItemContextMenu);
         wordList.setAdapter(wordListAdapter);
         wordListAdapter.submitList(wordDao.findAll().stream().map(Word::fromEntity).collect(Collectors.toList()));
 
@@ -60,6 +54,13 @@ public class ManageWordListFragment extends Fragment {
         addButton.setOnClickListener(v -> {
             SaveWordFragment saveWordFragment = new SaveWordFragment(this::insertWord, new WordEntity(UUID.randomUUID(), null, null, Locale.UK.getLanguage(), Locale.forLanguageTag("hu").getLanguage()));
             saveWordFragment.show(getParentFragmentManager(), "addWordDialog");
+        });
+    }
+
+    private void createListItemContextMenu(ContextMenu menu, WordListAdapter.ViewHolder v) {
+        menu.add(0, 0, 0, "Delete").setOnMenuItemClickListener(item -> {
+            deleteWord(v);
+            return true;
         });
     }
 

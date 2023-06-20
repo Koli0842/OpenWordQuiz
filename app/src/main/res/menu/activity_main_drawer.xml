@@ -14,12 +14,6 @@
             android:id="@+id/nav_statistics"
             android:icon="@drawable/ic_stars"
             android:title="Statistics" />
-    </group>
-
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_login"
-            android:title="Login" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"

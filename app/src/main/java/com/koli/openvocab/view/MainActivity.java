@@ -1,11 +1,9 @@
 package com.koli.openvocab.view;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -13,12 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.koli.openvocab.R;
-import com.koli.openvocab.sync.view.login.LoginActivity;
 import com.koli.openvocab.view.dictionary.DictionarySelectionFragment;
 import com.koli.openvocab.view.quiz.QuizSelectionFragment;
 import com.koli.openvocab.view.settings.SettingsFragment;
@@ -132,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
             activePage = itemId;
             invalidateOptionsMenu();
             setTitle("Settings");
-        } else if (itemId == R.id.nav_login) {
-            startActivity(new Intent(this, LoginActivity.class));
         }
 
         drawer.closeDrawer(GravityCompat.START);

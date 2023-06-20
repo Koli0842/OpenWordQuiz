@@ -37,7 +37,7 @@ public class DictionaryActivity extends AppCompatActivity {
         WordListAdapter listAdapter = new WordListAdapter(view -> {
             tts.setLanguage(view.getEntity().getQueryLocale());
             tts.speak(view.getEntity().getQuery(), TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString());
-        }, (item, v) -> false);
+        }, (item, v) -> {});
         listAdapter.submitList(wordDao.findAllInDictionary(dictionaryId).stream().map(Word::fromEntity).collect(Collectors.toList()));
 
         listView.setAdapter(listAdapter);

@@ -13,8 +13,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.koli.openvocab.R;
-import com.koli.openvocab.model.DictionaryImport;
-import com.koli.openvocab.model.Word;
 import com.koli.openvocab.persistence.sql.entity.WordEntity;
 
 import java.util.Locale;

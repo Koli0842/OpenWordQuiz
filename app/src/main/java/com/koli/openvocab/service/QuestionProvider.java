@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.koli.openvocab.model.Question;
 import com.koli.openvocab.model.Word;
-import com.koli.openvocab.persistence.sql.entity.WordEntity;
 import com.koli.openvocab.settings.QuizSettings;
 import com.koli.openvocab.settings.SettingsProvider;
 

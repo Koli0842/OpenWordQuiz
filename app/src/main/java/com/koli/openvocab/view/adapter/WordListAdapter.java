@@ -1,7 +1,7 @@
 package com.koli.openvocab.view.adapter;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,20 +17,20 @@ import com.koli.openvocab.model.Word;
 public class WordListAdapter extends ListAdapter<Word, WordListAdapter.ViewHolder> {
 
     private final OnItemClickListener onItemClickListener;
-    private final OnItemContextMenuClickListener contextMenuItemListener;
+    private final OnCreateContextMenuListener onCreateContextMenuListener;
 
     public interface OnItemClickListener {
         void onClick(ViewHolder viewHolder);
     }
 
-    public interface OnItemContextMenuClickListener {
-        boolean onClick(MenuItem menuItem, ViewHolder viewHolder);
+    public interface OnCreateContextMenuListener {
+        void onCreateContextMenu(ContextMenu contextMenu, ViewHolder viewHolder);
     }
 
-    public WordListAdapter(OnItemClickListener onItemClickListener, OnItemContextMenuClickListener contextMenuItemListener) {
+    public WordListAdapter(OnItemClickListener onItemClickListener, OnCreateContextMenuListener onCreateContextMenuListener) {
         super(new WordDiff());
         this.onItemClickListener = onItemClickListener;
-        this.contextMenuItemListener = contextMenuItemListener;
+        this.onCreateContextMenuListener = onCreateContextMenuListener;
     }
 
     @NonNull
@@ -40,7 +40,7 @@ public class WordListAdapter extends ListAdapter<Word, WordListAdapter.ViewHolde
             .inflate(R.layout.list_row_dictionary_words, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(v -> onItemClickListener.onClick(viewHolder));
-        view.setOnCreateContextMenuListener((menu, v, menuInfo) -> menu.add(0, 0, 0, "Delete").setOnMenuItemClickListener(item -> contextMenuItemListener.onClick(item, viewHolder)));
+        view.setOnCreateContextMenuListener((menu, v, menuInfo) -> onCreateContextMenuListener.onCreateContextMenu(menu, viewHolder));
         return viewHolder;
     }
 

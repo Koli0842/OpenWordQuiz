@@ -35,7 +35,7 @@ public class QuizSelectionFragment extends Fragment {
             Intent intent = new Intent(context, QuizActivity.class);
             intent.putExtra("DICTIONARY", (String) v.getName().getTag());
             startActivity(intent);
-        }, (vh, item) -> false);
+        }, (vh, item) -> {});
         dictionaryList.setAdapter(listAdapter);
         listAdapter.submitList(dictionaryDao.findAll());
     }

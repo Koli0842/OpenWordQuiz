@@ -3,6 +3,7 @@ package com.koli.openvocab.persistence.sql.repository;
 import com.koli.openvocab.persistence.sql.dao.DictionaryDao;
 import com.koli.openvocab.persistence.sql.dao.DictionaryWordMappingDao;
 import com.koli.openvocab.persistence.sql.dao.WordDao;
+import com.koli.openvocab.persistence.sql.entity.DictionaryEntity;
 import com.koli.openvocab.persistence.sql.entity.DictionaryWithWords;
 import com.koli.openvocab.persistence.sql.entity.DictionaryWordMapping;
 import com.koli.openvocab.persistence.sql.entity.WordEntity;
@@ -22,6 +23,12 @@ public class DictionaryWithWordsRepository {
         this.dictionaryDao = dictionaryDao;
         this.wordDao = wordDao;
         this.dictionaryWordMappingDao = dictionaryWordMappingDao;
+    }
+
+    public DictionaryWithWords findById(UUID id) {
+        DictionaryEntity dictionary = dictionaryDao.findById(id);
+        List<WordEntity> words = wordDao.findAllInDictionary(id);
+        return new DictionaryWithWords(dictionary, words);
     }
 
     public void insertMainIfNotPresent() {

@@ -6,6 +6,7 @@ import android.net.Uri;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.logging.Logger;
 
@@ -17,6 +18,19 @@ public class StorageUtil {
 
     public StorageUtil(Context context) {
         this.context = context;
+    }
+
+    public void write(Uri path, String content) {
+        try (OutputStream stream = context.getContentResolver().openOutputStream(path)) {
+            stream.write(content.getBytes());
+            log.info(String.format("Written file with name %s: %s", path.getPath(), content));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public String read(Uri path) {

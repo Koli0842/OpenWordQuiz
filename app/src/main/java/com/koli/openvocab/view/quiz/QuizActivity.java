@@ -74,8 +74,6 @@ public class QuizActivity extends AppCompatActivity {
         findViewById(R.id.constraintLayout).setOnClickListener((v) -> skipToNextQuestionWhenAnswered());
 
         this.tts = new TextToSpeech(this, this::initTts);
-
-        nextQuestion();
     }
 
     private void initTts(int status) {
@@ -88,6 +86,7 @@ public class QuizActivity extends AppCompatActivity {
         } else {
             log.info("Failed to initialize TTS");
         }
+        nextQuestion();
     }
 
     @Override
@@ -118,10 +117,13 @@ public class QuizActivity extends AppCompatActivity {
             questionView.setText("\uD83D\uDD0A");
         }
 
-        if ("\uD83D\uDD0A".contentEquals(questionView.getText())) {
-            tts.setLanguage(question.getWord().getQueryLocale());
-            tts.speak(question.getWord().getQuery(), TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString());
-        }
+        //if ("\uD83D\uDD0A".contentEquals(questionView.getText())) {
+        //    tts.setLanguage(question.getWord().getQueryLocale());
+        //    tts.speak(question.getWord().getQuery(), TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString());
+        //}
+
+        tts.setLanguage(question.getWord().getQueryLocale());
+        tts.speak(question.getWord().getQuery(), TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString());
 
         questionView.setOnClickListener(v -> tts.speak(question.getWord().getQuery(), TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString()));
         answerView.setAdapter(quizAdapter);

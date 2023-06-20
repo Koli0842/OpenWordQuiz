@@ -12,9 +12,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.koli.openvocab.R;
 import com.koli.openvocab.persistence.sql.entity.DictionaryEntity;
-import com.koli.openvocab.persistence.sql.entity.WordEntity;
-
-import java.util.UUID;
 
 public class SaveDictionaryDialogFragment extends DialogFragment {
 

@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.koli.openvocab.R;
 import com.koli.openvocab.model.CheckedWord;
 
-import java.util.List;
-
 public class CheckingWordListAdapter extends ListAdapter<CheckedWord, CheckingWordListAdapter.ViewHolder> {
 
     private final OnItemCheckChangedListener onItemCheckChangedListener;
